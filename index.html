@@ -1,0 +1,3203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>75 Medium Wellness Planner</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --ink: #09111f;
+      --paper: #f3f7ff;
+      --paper-2: #ffffff;
+      --muted: #42526b;
+      --rule: rgba(9, 17, 31, 0.08);
+      --accent: #2f6df6;
+      --accent-2: #63e4c3;
+      --accent-3: #ff8d6d;
+      --accent-4: #a986ff;
+      --stripe: #eef4ff;
+      --card: rgba(255, 255, 255, 0.72);
+      --amber: #e39b34;
+      --red: #f25f4c;
+      --green: #25a77f;
+      --shadow: 0 24px 80px rgba(25, 44, 88, 0.12);
+      --shadow-soft: 0 12px 36px rgba(25, 44, 88, 0.09);
+      --radius: 24px;
+      --tab-h: 74px;
+      --sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 12%, rgba(99, 228, 195, 0.26), transparent 20%),
+        radial-gradient(circle at 82% 16%, rgba(47, 109, 246, 0.22), transparent 24%),
+        radial-gradient(circle at 80% 74%, rgba(255, 141, 109, 0.18), transparent 20%),
+        radial-gradient(circle at 24% 84%, rgba(169, 134, 255, 0.18), transparent 18%),
+        linear-gradient(180deg, #f7fbff 0%, #eef5ff 48%, #f7f8ff 100%);
+      min-height: 100vh;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      pointer-events: none;
+      z-index: -1;
+      border-radius: 999px;
+      filter: blur(24px);
+      opacity: 0.8;
+    }
+
+    body::before {
+      width: 340px;
+      height: 340px;
+      top: 96px;
+      right: -90px;
+      background: radial-gradient(circle, rgba(47, 109, 246, 0.20), transparent 68%);
+    }
+
+    body::after {
+      width: 360px;
+      height: 360px;
+      left: -120px;
+      bottom: 60px;
+      background: radial-gradient(circle, rgba(99, 228, 195, 0.16), transparent 72%);
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+      color: inherit;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid rgba(47, 109, 246, 0.42);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -3rem;
+      z-index: 40;
+      background: #09111f;
+      color: #fff;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .skip-link:focus {
+      top: 1rem;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+      background: linear-gradient(135deg, #1c2458 0%, #2f6df6 48%, #58c3ff 100%);
+      color: #fefeff;
+      padding: 0.82rem 1.15rem;
+      border-radius: 999px;
+      box-shadow: 0 14px 28px rgba(47, 109, 246, 0.24);
+      transition: transform 180ms ease, opacity 180ms ease, background 180ms ease, box-shadow 180ms ease;
+      letter-spacing: 0.01em;
+      font-weight: 700;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 34px rgba(47, 109, 246, 0.28);
+    }
+
+    button.secondary {
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--ink);
+      border: 1px solid rgba(47, 109, 246, 0.10);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+
+    button.ghost {
+      background: linear-gradient(135deg, rgba(99, 228, 195, 0.22), rgba(255, 255, 255, 0.86));
+      color: var(--ink);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      height: var(--tab-h);
+      backdrop-filter: blur(22px) saturate(145%);
+      background: rgba(243, 247, 255, 0.52);
+      border-bottom: 1px solid rgba(47, 109, 246, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.35rem;
+      width: min(1120px, 100%);
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.35rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.48);
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      color: var(--muted);
+      padding: 0.9rem 0.6rem;
+      border-radius: 999px;
+      border-bottom: 0;
+      font-size: 0.96rem;
+      letter-spacing: 0.02em;
+      box-shadow: none;
+    }
+
+    .tab-btn.active {
+      color: #fffdf9;
+      background: linear-gradient(135deg, #1a2050 0%, #2f6df6 58%, #62d5d0 100%);
+      box-shadow: 0 14px 28px rgba(47, 109, 246, 0.20);
+    }
+
+    main {
+      width: min(1180px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 1.5rem 0 3rem;
+    }
+
+    .panel {
+      display: none;
+      animation: fadeUp 220ms ease;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero,
+    .card,
+    .side-card,
+    .meal-output,
+    .section-card,
+    .meal-day-card {
+      background: var(--card);
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px) saturate(125%);
+    }
+
+    .hero {
+      padding: 1.6rem;
+      margin-bottom: 1.1rem;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.84), rgba(241, 246, 255, 0.74)),
+        rgba(255, 255, 255, 0.55);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -60px -70px auto;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(47, 109, 246, 0.24), transparent 68%);
+      pointer-events: none;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      left: -120px;
+      top: -160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99, 228, 195, 0.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .hero-head {
+      display: flex;
+      gap: 1rem;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 800;
+      letter-spacing: -0.045em;
+    }
+
+    h1 {
+      font-size: clamp(2.35rem, 5vw, 4.35rem);
+      line-height: 0.9;
+      margin-bottom: 0.35rem;
+      max-width: 9ch;
+    }
+
+    h2 {
+      font-size: clamp(1.7rem, 2.5vw, 2.4rem);
+      margin-bottom: 0.55rem;
+    }
+
+    .subtle {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .quote-card {
+      margin-top: 0.3rem;
+      max-width: 760px;
+      padding: 1rem 1.1rem;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(239, 246, 255, 0.56));
+      border: 1px solid rgba(47, 109, 246, 0.10);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    .quote-text {
+      margin: 0;
+      font-size: clamp(1.02rem, 1.8vw, 1.22rem);
+      line-height: 1.55;
+      color: #18304f;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .hero h1,
+    .hero h2 {
+      background: linear-gradient(135deg, #09111f 0%, #2f6df6 55%, #0b9275 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .mono {
+      font-family: var(--mono);
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.9fr);
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .progress-shell {
+      margin-top: 1rem;
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .progress-track,
+    .macro-track {
+      position: relative;
+      height: 10px;
+      background: rgba(47, 109, 246, 0.10);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill,
+    .macro-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0;
+      background: linear-gradient(90deg, #2a3276, var(--accent), var(--accent-2));
+      border-radius: inherit;
+      transition: width 220ms ease, background 220ms ease;
+    }
+
+    .goals-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .header-snapshot {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    .snapshot-card {
+      padding: 0.95rem 1rem;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(239, 246, 255, 0.62));
+      border: 1px solid rgba(47, 109, 246, 0.10);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+      display: grid;
+      gap: 0.32rem;
+    }
+
+    .snapshot-label {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .snapshot-value {
+      font-size: clamp(1.1rem, 2vw, 1.45rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #14284b;
+    }
+
+    .snapshot-note {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.35;
+    }
+
+    .snapshot-card.on-track .snapshot-value {
+      color: #157347;
+    }
+
+    .snapshot-card.caution .snapshot-value {
+      color: #a15d2b;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.58rem 0.82rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.62);
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      font-size: 0.9rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    }
+
+    .pill strong {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 0.84rem;
+    }
+
+    .habit-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      background: linear-gradient(135deg, rgba(47, 109, 246, 0.14), rgba(99, 228, 195, 0.14));
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74);
+    }
+
+    .habit-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .habit-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      min-width: 0;
+    }
+
+    .habit-inline span:last-child {
+      min-width: 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .habit-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) 320px;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .habit-calendar-shell {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .habit-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.9rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .segment-control,
+    .calendar-nav {
+      display: inline-flex;
+      gap: 0.35rem;
+      padding: 0.34rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.60);
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .segment-btn,
+    .nav-btn {
+      background: transparent;
+      color: var(--muted);
+      padding: 0.66rem 0.96rem;
+      border-radius: 999px;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .segment-btn.active,
+    .nav-btn.active {
+      background: linear-gradient(135deg, #1a2050 0%, #2f6df6 58%, #62d5d0 100%);
+      color: #fffdf9;
+      box-shadow: 0 12px 22px rgba(47, 109, 246, 0.18);
+    }
+
+    .calendar-title {
+      display: grid;
+      gap: 0.18rem;
+    }
+
+    .calendar-title .eyebrow {
+      font-family: var(--mono);
+      color: var(--accent);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    .weekday-chip {
+      padding: 0.56rem 0.4rem;
+      border-radius: 999px;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.64);
+      border: 1px solid rgba(47, 109, 246, 0.07);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .month-day {
+      min-height: 150px;
+      padding: 0.9rem;
+      border-radius: 24px;
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(241, 246, 255, 0.72));
+      display: grid;
+      gap: 0.75rem;
+      align-content: start;
+      box-shadow: var(--shadow-soft);
+      transition: border-color 180ms ease, transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+    }
+
+    button.month-day {
+      width: 100%;
+      text-align: left;
+      color: var(--ink);
+      box-shadow: var(--shadow-soft);
+      cursor: pointer;
+    }
+
+    .month-day.other-month {
+      opacity: 0.72;
+      background: rgba(239, 244, 255, 0.82);
+    }
+
+    .month-day.challenge-off {
+      background: linear-gradient(180deg, rgba(235, 240, 250, 0.88), rgba(242, 246, 255, 0.68));
+    }
+
+    .month-day.weekend {
+      background:
+        linear-gradient(180deg, rgba(255, 141, 109, 0.10), rgba(255, 255, 255, 0.92));
+    }
+
+    .month-day.selected {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 34px rgba(47, 109, 246, 0.18);
+    }
+
+    .month-day.today {
+      outline: 1px solid rgba(22, 22, 20, 0.12);
+      outline-offset: -8px;
+    }
+
+    .month-day-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 0.5rem;
+    }
+
+    .month-day-head > div {
+      display: grid;
+      gap: 0.18rem;
+    }
+
+    .month-day-head strong {
+      font-family: var(--mono);
+      font-size: 1rem;
+      color: #10203d;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.74);
+    }
+
+    .day-tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: #516684;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.74);
+    }
+
+    .month-day.other-month .month-day-head strong,
+    .month-day.other-month .day-tag {
+      color: #637798;
+    }
+
+    .month-day.challenge-off .month-day-head strong,
+    .month-day.challenge-off .day-tag {
+      color: #5b6f8e;
+    }
+
+    .month-day.weekend .month-day-head strong,
+    .month-day.weekend .day-tag {
+      color: #10203d;
+    }
+
+    .day-progress {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .mini-bar {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(47, 109, 246, 0.10);
+      overflow: hidden;
+    }
+
+    .mini-bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #2a3276, var(--accent), var(--accent-2));
+    }
+
+    .month-day p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+
+    .week-view-grid {
+      display: grid;
+      grid-template-columns: 220px repeat(7, minmax(0, 1fr));
+      gap: 0.7rem;
+      align-items: stretch;
+    }
+
+    .week-day-head,
+    .week-habit-label,
+    .week-cell {
+      border-radius: 20px;
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .week-day-head {
+      padding: 0.8rem 0.65rem;
+      text-align: center;
+      min-height: 88px;
+      display: grid;
+      align-content: center;
+      gap: 0.12rem;
+      color: #10203d;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .week-day-head strong,
+    .week-day-head .mono,
+    .week-day-head .day-tag {
+      color: #10203d;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.72);
+    }
+
+    .week-day-head strong {
+      font-size: 0.88rem;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    .week-day-head .mono {
+      font-size: 0.76rem;
+      line-height: 1.05;
+      font-weight: 600;
+    }
+
+    .week-day-head .day-tag {
+      font-size: 0.7rem;
+      line-height: 1.05;
+    }
+
+    .week-day-head.weekend {
+      background: linear-gradient(180deg, rgba(255, 141, 109, 0.10), rgba(255, 255, 255, 0.78));
+    }
+
+    .week-day-head.selected {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .week-habit-label {
+      padding: 0.9rem 1rem;
+      display: grid;
+      gap: 0.22rem;
+      align-content: center;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(241, 246, 255, 0.72));
+    }
+
+    .week-habit-label small {
+      color: var(--muted);
+      font-family: var(--mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .week-habit-label strong .habit-inline {
+      display: flex;
+      align-items: center;
+    }
+
+    .week-cell {
+      display: grid;
+      place-items: center;
+      min-height: 76px;
+      cursor: pointer;
+      transition: background 180ms ease, border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+      position: relative;
+    }
+
+    button.week-cell {
+      width: 100%;
+      padding: 0;
+      color: var(--ink);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .week-cell.sub {
+      min-height: 60px;
+    }
+
+    .week-cell.inactive {
+      cursor: default;
+      background: rgba(234, 240, 251, 0.86);
+      box-shadow: none;
+    }
+
+    .week-cell.checked::after {
+      content: "✓";
+      width: 28px;
+      height: 28px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #1c7f52 0%, #24b36b 52%, #6fe49c 100%);
+      color: #fffdf9;
+      font-weight: 700;
+      box-shadow: 0 12px 20px rgba(36, 179, 107, 0.24);
+    }
+
+    .week-cell.selected {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .day-view {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .day-summary-card {
+      padding: 1rem;
+      border-radius: 22px;
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(238, 245, 255, 0.72));
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .habit-checklist {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .habit-check-card {
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.76);
+      padding: 0.95rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .habit-check-main {
+      display: grid;
+      gap: 0.22rem;
+    }
+
+    .habit-check-main small {
+      color: var(--muted);
+      font-family: var(--mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .habit-toggle-row {
+      display: flex;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+    }
+
+    .habit-toggle {
+      min-width: 148px;
+      padding: 0.82rem 1rem;
+      border-radius: 16px;
+      border: 1px solid rgba(47, 109, 246, 0.10);
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--ink);
+      box-shadow: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+    }
+
+    .habit-toggle.checked {
+      background: linear-gradient(135deg, #1c7f52 0%, #24b36b 52%, #6fe49c 100%);
+      color: #fffdf9;
+      border-color: rgba(36, 179, 107, 0.24);
+      box-shadow: 0 14px 26px rgba(36, 179, 107, 0.24);
+    }
+
+    .habit-toggle.checked::before {
+      content: "✓";
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.20);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      font-weight: 800;
+    }
+
+    .habit-toggle.inactive {
+      background: rgba(234, 240, 251, 0.86);
+      color: var(--muted);
+      border-color: rgba(47, 109, 246, 0.08);
+      cursor: default;
+    }
+
+    .celebration-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      pointer-events: none;
+      display: none;
+      place-items: center;
+      overflow: hidden;
+      background: radial-gradient(circle at center, rgba(255, 255, 255, 0.08), transparent 58%);
+    }
+
+    .celebration-overlay.active {
+      display: grid;
+    }
+
+    .celebration-burst {
+      position: relative;
+      width: min(80vw, 540px);
+      height: min(80vw, 540px);
+      display: grid;
+      place-items: center;
+    }
+
+    .celebration-ring,
+    .celebration-ring::before,
+    .celebration-ring::after {
+      position: absolute;
+      border-radius: 50%;
+      content: "";
+    }
+
+    .celebration-ring {
+      width: 160px;
+      height: 160px;
+      border: 16px solid rgba(36, 179, 107, 0.18);
+      animation: celebrationPulse 1.7s ease-out forwards;
+    }
+
+    .celebration-ring::before {
+      inset: -34px;
+      border: 12px solid rgba(47, 109, 246, 0.12);
+    }
+
+    .celebration-ring::after {
+      inset: 30px;
+      border: 10px solid rgba(111, 228, 156, 0.22);
+    }
+
+    .celebration-core {
+      position: relative;
+      z-index: 2;
+      padding: 1.25rem 1.5rem;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(36, 179, 107, 0.16);
+      box-shadow: 0 24px 60px rgba(36, 179, 107, 0.16);
+      text-align: center;
+      backdrop-filter: blur(14px);
+      animation: celebrationFloat 1.8s ease-out forwards;
+    }
+
+    .celebration-core strong {
+      display: block;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      color: #127246;
+      margin-bottom: 0.3rem;
+    }
+
+    .celebration-core span {
+      color: #2b4a64;
+      font-weight: 600;
+    }
+
+    .celebration-confetti {
+      position: absolute;
+      inset: 0;
+    }
+
+    .celebration-confetti span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 24px;
+      border-radius: 999px;
+      opacity: 0;
+      transform-origin: center -120px;
+      animation: confettiBurst 1.8s ease-out forwards;
+    }
+
+    .celebration-confetti span:nth-child(4n + 1) {
+      background: linear-gradient(180deg, #2f6df6, #63e4c3);
+    }
+
+    .celebration-confetti span:nth-child(4n + 2) {
+      background: linear-gradient(180deg, #24b36b, #8ef2b7);
+    }
+
+    .celebration-confetti span:nth-child(4n + 3) {
+      background: linear-gradient(180deg, #ff8d6d, #ffd06c);
+    }
+
+    .celebration-confetti span:nth-child(4n + 4) {
+      background: linear-gradient(180deg, #a986ff, #78aaff);
+    }
+
+    @keyframes celebrationPulse {
+      0% {
+        opacity: 0;
+        transform: scale(0.4);
+      }
+
+      18% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(1.6);
+      }
+    }
+
+    @keyframes celebrationFloat {
+      0% {
+        opacity: 0;
+        transform: translateY(18px) scale(0.88);
+      }
+
+      14% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      82% {
+        opacity: 1;
+        transform: translateY(-4px) scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-12px) scale(0.96);
+      }
+    }
+
+    @keyframes confettiBurst {
+      0% {
+        opacity: 0;
+        transform: rotate(var(--angle)) translateY(0) scale(0.3);
+      }
+
+      12% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+        transform: rotate(var(--angle)) translateY(-210px) scale(1);
+      }
+    }
+
+    .tracker-card {
+      padding: 1.15rem;
+    }
+
+    .tracker-block + .tracker-block {
+      margin-top: 1rem;
+    }
+
+    .tracker-table-wrap {
+      overflow-x: auto;
+      border-radius: 16px;
+      border: 1px solid var(--rule);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 960px;
+      table-layout: fixed;
+    }
+
+    .tracker-table th,
+    .tracker-table td {
+      border: 1px solid #ebe7e2;
+      text-align: center;
+      padding: 0;
+      height: 44px;
+      position: relative;
+    }
+
+    .tracker-table th.label,
+    .tracker-table td.label,
+    .tracker-table td.sub-label {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: #fff;
+      min-width: 132px;
+      max-width: 132px;
+      text-align: left;
+      padding: 0.8rem 0.85rem;
+      font-size: 0.94rem;
+    }
+
+    .tracker-table td.sub-label {
+      min-width: 58px;
+      max-width: 58px;
+      left: 132px;
+      z-index: 3;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-family: var(--mono);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tracker-table td.group-label {
+      font-weight: 600;
+      font-family: var(--serif);
+      background: var(--stripe);
+    }
+
+    .tracker-table thead th {
+      background: #fcfbf9;
+      font-weight: 600;
+      height: 74px;
+      vertical-align: top;
+      padding-top: 0.45rem;
+      min-width: 30px;
+    }
+
+    .tracker-table thead th.weekend {
+      background: rgba(187, 119, 51, 0.08);
+    }
+
+    .day-header {
+      display: grid;
+      justify-items: center;
+      gap: 0.15rem;
+      font-size: 0.78rem;
+      line-height: 1.05;
+    }
+
+    .day-header .month {
+      color: var(--accent);
+      font-size: 0.72rem;
+      min-height: 0.9rem;
+      font-family: var(--mono);
+      letter-spacing: 0.08em;
+    }
+
+    .day-header .weekday {
+      font-family: var(--mono);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .day-header .date {
+      font-family: var(--mono);
+      font-size: 0.88rem;
+    }
+
+    .tracker-table td.weekend {
+      background: rgba(187, 119, 51, 0.07);
+    }
+
+    .tracker-table td.inactive {
+      background: #f1efeb;
+      cursor: default;
+    }
+
+    .tracker-table td.active-cell {
+      cursor: pointer;
+      transition: background 160ms ease;
+    }
+
+    .tracker-table td.active-cell:hover {
+      background: #f7f4ee;
+    }
+
+    .tracker-table td.checked::after {
+      content: "✓";
+      position: absolute;
+      inset: 50% auto auto 50%;
+      transform: translate(-50%, -52%);
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: var(--ink);
+      color: var(--paper);
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .side-card {
+      padding: 1.15rem;
+      position: sticky;
+      top: calc(var(--tab-h) + 1rem);
+    }
+
+    .summary-list,
+    .nutrition-items,
+    .group-list,
+    .prep-list,
+    .recipe-list {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .summary-item {
+      display: grid;
+      gap: 0.35rem;
+      padding: 0.82rem 0.9rem;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(241, 246, 255, 0.72));
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    }
+
+    .summary-item strong {
+      font-size: 0.96rem;
+      display: block;
+    }
+
+    .summary-item span {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-family: var(--mono);
+    }
+
+    .nutrition-layout,
+    .planner-layout {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .macro-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .macro-card {
+      padding: 1rem;
+      border-radius: 20px;
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(238, 246, 255, 0.72));
+      box-shadow: var(--shadow-soft);
+    }
+
+    .macro-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-items: baseline;
+      margin-bottom: 0.55rem;
+    }
+
+    .macro-top strong {
+      font-size: 0.93rem;
+    }
+
+    .macro-top span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    .macro-fill.warn {
+      background: linear-gradient(90deg, #f6b14d, var(--amber));
+    }
+
+    .macro-fill.over {
+      background: linear-gradient(90deg, #ff8b72, var(--red));
+    }
+
+    .section-card,
+    .meal-output {
+      padding: 1.15rem;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .field-row,
+    .planner-grid,
+    .settings-grid {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .field-row.two,
+    .planner-grid,
+    .settings-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    label.field {
+      display: grid;
+      gap: 0.35rem;
+      font-size: 0.89rem;
+      color: var(--muted);
+    }
+
+    label.field input,
+    label.field textarea {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(47, 109, 246, 0.10);
+      background: rgba(255, 255, 255, 0.78);
+      padding: 0.92rem 0.95rem;
+      color: var(--ink);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    }
+
+    label.field textarea {
+      min-height: 260px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    #meal-import-text {
+      min-height: 180px;
+    }
+
+    .meals-grid {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    details.meal-section,
+    details.collapsible {
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.76);
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+
+    details.meal-section[open],
+    details.collapsible[open] {
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    details summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .meal-summary,
+    .collapse-summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem;
+      background: linear-gradient(180deg, rgba(238, 245, 255, 0.9), rgba(255, 255, 255, 0.84));
+    }
+
+    .meal-summary strong,
+    .collapse-summary strong {
+      font-size: 1rem;
+    }
+
+    .meal-summary .meta,
+    .collapse-summary .meta {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      text-align: right;
+    }
+
+    .meal-body,
+    .collapse-body {
+      padding: 1rem;
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .nutrition-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 0.8rem;
+      align-items: center;
+      padding: 0.9rem 0.95rem;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(241, 246, 255, 0.72));
+      border: 1px solid rgba(47, 109, 246, 0.08);
+    }
+
+    .nutrition-item.locked {
+      background: linear-gradient(180deg, rgba(239, 244, 255, 0.92) 0%, rgba(232, 239, 252, 0.84) 100%);
+    }
+
+    .nutrition-item h4 {
+      font-family: var(--sans);
+      font-size: 0.98rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .nutrition-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    .nutrition-item .numbers {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      text-align: right;
+      color: var(--muted);
+    }
+
+    .inline-form {
+      display: grid;
+      gap: 0.7rem;
+      padding: 1rem;
+      border-radius: 20px;
+      border: 1px dashed rgba(47, 109, 246, 0.24);
+      background: linear-gradient(180deg, rgba(248, 252, 255, 0.94), rgba(239, 245, 255, 0.86));
+    }
+
+    .inline-form .compact-grid {
+      display: grid;
+      gap: 0.7rem;
+      grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 0.7fr));
+    }
+
+    .inline-form .compact-grid-2 {
+      display: grid;
+      gap: 0.7rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .inline-form input {
+      border: 1px solid rgba(47, 109, 246, 0.10);
+      border-radius: 14px;
+      padding: 0.78rem 0.85rem;
+      background: rgba(255, 255, 255, 0.86);
+    }
+
+    .warning {
+      padding: 0.75rem 0.9rem;
+      border-radius: 16px;
+      background: rgba(255, 141, 109, 0.12);
+      border: 1px solid rgba(255, 141, 109, 0.18);
+      color: #a24d3d;
+      font-size: 0.88rem;
+    }
+
+    .planner-actions,
+    .inline-actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .automation-note {
+      padding: 0.9rem 1rem;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(47, 109, 246, 0.10), rgba(99, 228, 195, 0.10));
+      border: 1px solid rgba(47, 109, 246, 0.12);
+      color: #20314d;
+      line-height: 1.45;
+    }
+
+    .stream-box {
+      padding: 1rem;
+      border: 1px solid rgba(47, 109, 246, 0.08);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(246, 250, 255, 0.96), rgba(238, 245, 255, 0.90));
+      font-family: var(--mono);
+      white-space: pre-wrap;
+      color: #50483e;
+      max-height: 280px;
+      overflow: auto;
+    }
+
+    .meal-plan-grid {
+      display: grid;
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .meal-day-card {
+      overflow: hidden;
+    }
+
+    .meal-day-card details {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .meal-day-card .collapse-summary {
+      padding: 1rem 1.1rem;
+      background:
+        linear-gradient(90deg, rgba(47, 109, 246, 0.12), transparent 40%),
+        linear-gradient(180deg, rgba(239, 245, 255, 0.92) 0%, rgba(255, 255, 255, 0.92) 100%);
+    }
+
+    .day-date {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      margin-top: 0.25rem;
+    }
+
+    .meal-lines {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .meal-line {
+      padding: 0.9rem 0.95rem;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(241, 246, 255, 0.72));
+      border: 1px solid rgba(47, 109, 246, 0.08);
+    }
+
+    .meal-line strong {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: 0.9rem;
+    }
+
+    .meal-line p {
+      margin: 0;
+      line-height: 1.45;
+      color: #3e3b36;
+    }
+
+    .macro-chip {
+      display: inline-flex;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(240, 246, 255, 0.92);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: #5b5247;
+      margin-top: 0.75rem;
+      border: 1px solid rgba(47, 109, 246, 0.08);
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .empty-state {
+      padding: 1rem;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(247, 251, 255, 0.95), rgba(238, 245, 255, 0.86));
+      border: 1px dashed rgba(47, 109, 246, 0.22);
+      color: var(--muted);
+    }
+
+    .status {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    @media (max-width: 1024px) {
+      .habit-layout,
+      .split,
+      .planner-grid,
+      .settings-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .week-view-grid {
+        grid-template-columns: 180px repeat(7, minmax(92px, 1fr));
+        overflow-x: auto;
+      }
+
+      .side-card {
+        position: static;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .macro-grid,
+      .field-row.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .inline-form .compact-grid,
+      .inline-form .compact-grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      main {
+        width: min(100%, calc(100% - 1rem));
+      }
+
+      .hero-head,
+      .section-head,
+      .meal-summary,
+      .collapse-summary {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .actions {
+        justify-content: flex-start;
+      }
+
+      .month-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .header-snapshot {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      :root {
+        --tab-h: 88px;
+      }
+
+      .tabs {
+        gap: 0;
+      }
+
+      .tab-btn {
+        font-size: 0.84rem;
+      }
+
+      .macro-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nutrition-item {
+        grid-template-columns: 1fr;
+      }
+
+      .month-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .habit-controls,
+      .day-summary-card,
+      .habit-check-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .topbar,
+      .actions,
+      .side-card,
+      .planner-controls,
+      .stream-box,
+      .footer-note,
+      #nutrition-panel,
+      .screen-only,
+      .planner-config,
+      .planner-actions {
+        display: none !important;
+      }
+
+      body[data-print-mode="habit"] #habit-panel,
+      body[data-print-mode="meal"] #meal-panel {
+        display: block !important;
+      }
+
+      body[data-print-mode="habit"] #meal-panel,
+      body[data-print-mode="habit"] #nutrition-panel,
+      body[data-print-mode="meal"] #habit-panel,
+      body[data-print-mode="meal"] #nutrition-panel {
+        display: none !important;
+      }
+
+      main {
+        width: 100%;
+        padding: 0;
+      }
+
+      .hero,
+      .tracker-card,
+      .meal-output,
+      .meal-day-card,
+      .section-card {
+        box-shadow: none;
+        border: 0;
+        background: #fff;
+      }
+
+      .tracker-table-wrap {
+        overflow: visible;
+        border: 0;
+      }
+
+      table {
+        min-width: 0;
+        font-size: 10pt;
+      }
+
+      .meal-day-card details[open] .collapse-body,
+      .meal-day-card details:not([open]) .collapse-body {
+        display: block !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="topbar screen-only">
+    <nav class="tabs" aria-label="Top navigation">
+      <button type="button" class="tab-btn active" data-tab="habit-panel" id="tab-habit-panel" role="tab" aria-selected="true" aria-controls="habit-panel">Habit Tracker</button>
+      <button type="button" class="tab-btn" data-tab="nutrition-panel" id="tab-nutrition-panel" role="tab" aria-selected="false" aria-controls="nutrition-panel">Nutrition Tracker</button>
+      <button type="button" class="tab-btn" data-tab="meal-panel" id="tab-meal-panel" role="tab" aria-selected="false" aria-controls="meal-panel">Meal Planner</button>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="panel active" id="habit-panel" role="tabpanel" aria-labelledby="tab-habit-panel">
+      <div class="hero">
+        <div class="hero-head">
+          <div>
+            <h1>75 Medium</h1>
+            <div class="quote-card" aria-live="polite">
+              <p class="quote-text" id="habit-quote-text"></p>
+            </div>
+          </div>
+          <div class="actions screen-only">
+            <button type="button" class="secondary" id="habit-print-btn">Print Tracker</button>
+          </div>
+        </div>
+        <div class="progress-shell">
+          <div class="section-head" style="margin:0;">
+            <strong id="habit-progress-label">Day 0 of 75</strong>
+            <span class="status mono" id="habit-date-span"></span>
+          </div>
+          <div class="progress-track" id="habit-progressbar" role="progressbar" aria-labelledby="habit-progress-label" aria-valuemin="0" aria-valuemax="75" aria-valuenow="0">
+            <div class="progress-fill" id="habit-progress-fill"></div>
+          </div>
+        </div>
+        <div class="goals-strip">
+          <span class="pill"><span class="habit-inline"><span class="habit-icon" aria-hidden="true"><i data-lucide="dumbbell"></i></span><span><strong>5x</strong> Workout / week</span></span></span>
+          <span class="pill"><span class="habit-inline"><span class="habit-icon" aria-hidden="true"><i data-lucide="sparkles"></i></span><span><strong>5x</strong> Meditation / week</span></span></span>
+          <span class="pill"><span class="habit-inline"><span class="habit-icon" aria-hidden="true"><i data-lucide="notebook-pen"></i></span><span><strong>1x</strong> Journal / week</span></span></span>
+        </div>
+        <div class="header-snapshot" id="habit-header-snapshot" aria-live="polite"></div>
+      </div>
+
+      <div class="habit-layout">
+        <div class="tracker-card">
+          <div class="habit-calendar-shell">
+            <div class="habit-controls screen-only">
+              <div class="segment-control" id="habit-view-toggle" role="tablist" aria-label="Habit tracker views">
+                <button type="button" class="segment-btn" data-view="month" role="tab" aria-selected="false">Month View</button>
+                <button type="button" class="segment-btn active" data-view="week" role="tab" aria-selected="true">Week View</button>
+                <button type="button" class="segment-btn" data-view="day" role="tab" aria-selected="false">Day View</button>
+              </div>
+              <div class="calendar-nav">
+                <button type="button" class="nav-btn" id="habit-prev-btn">Prev</button>
+                <button type="button" class="nav-btn" id="habit-today-btn">Today</button>
+                <button type="button" class="nav-btn" id="habit-next-btn">Next</button>
+              </div>
+            </div>
+            <div class="section-head" style="margin-top:0;">
+              <div class="calendar-title">
+                <span class="eyebrow" id="habit-view-label">Challenge calendar</span>
+                <h3 id="habit-range-title">March 2026</h3>
+                <p class="subtle" id="habit-range-subtle" style="margin:0.2rem 0 0;">Select a date to focus the tracker.</p>
+              </div>
+            </div>
+            <div id="habit-tables"></div>
+          </div>
+        </div>
+
+        <aside class="side-card">
+          <div class="section-head">
+            <div>
+              <h3>This Week</h3>
+              <p class="subtle mono" id="habit-week-range" style="margin:0.3rem 0 0;"></p>
+            </div>
+          </div>
+          <div class="summary-list" id="habit-summary"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel" id="nutrition-panel" role="tabpanel" aria-labelledby="tab-nutrition-panel" hidden>
+      <div class="hero">
+        <div class="hero-head">
+          <div>
+            <h2>Nutrition Tracker</h2>
+            <p class="subtle">Daily food logging with fixed macro targets, automatic breakfast, and light guardrails for protein pairing and dairy checks.</p>
+          </div>
+          <div class="actions">
+            <label class="field" style="min-width:220px;">
+              <span>Date</span>
+              <input type="date" id="nutrition-date" />
+            </label>
+          </div>
+        </div>
+
+        <div class="macro-grid" id="macro-grid"></div>
+      </div>
+
+      <div class="nutrition-layout">
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h3>Meals</h3>
+              <p class="subtle" id="nutrition-date-label" style="margin:0.3rem 0 0;"></p>
+            </div>
+          </div>
+          <div class="meals-grid" id="nutrition-meals"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="meal-panel" role="tabpanel" aria-labelledby="tab-meal-panel" hidden>
+      <div class="hero">
+        <div class="hero-head">
+          <div>
+            <h2>Meal Planner</h2>
+            <p class="subtle">Use a simple ChatGPT workflow: prep the prompt, open ChatGPT, paste the result back here, and send dinners into your nutrition log when you want them there.</p>
+          </div>
+          <div class="actions">
+            <button type="button" id="meal-print-btn" class="secondary">Print Plan</button>
+            <button type="button" id="copy-plan-btn" class="ghost">Copy Full Plan</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="planner-layout">
+        <div class="planner-grid planner-config">
+          <div class="section-card planner-controls">
+            <div class="section-head">
+              <div>
+                <h3>ChatGPT Planner</h3>
+                <p class="subtle" style="margin:0.3rem 0 0;">No API keys. Think of this like a tiny personal automation for your weekly plan.</p>
+              </div>
+            </div>
+            <div class="automation-note">
+              1. Click <strong>Open in ChatGPT</strong>.
+              2. Paste or send the prepared prompt.
+              3. Paste ChatGPT's full reply back here and import it.
+            </div>
+            <div class="settings-grid">
+              <label class="field">
+                <span>Any adjustments this week?</span>
+                <input type="text" id="meal-adjustments" placeholder="More Indian, keep Wednesday simple, skip paneer..." />
+              </label>
+              <label class="field">
+                <span>Paste ChatGPT result</span>
+                <textarea id="meal-import-text" placeholder="Paste the full ChatGPT response here, including the &lt;meal-plan-json&gt; block."></textarea>
+              </label>
+            </div>
+            <div class="planner-actions" style="margin-top:1rem;">
+              <button type="button" id="generate-plan-btn">Open in ChatGPT</button>
+              <button type="button" id="copy-prompt-btn" class="secondary">Copy Prompt</button>
+              <button type="button" id="import-plan-btn" class="secondary">Import ChatGPT Result</button>
+              <span class="status" id="meal-status" role="status" aria-live="polite">Ready when you are.</span>
+            </div>
+          </div>
+
+          <div class="section-card planner-controls">
+            <div class="section-head">
+              <div>
+                <h3>Prompt</h3>
+                <p class="subtle" style="margin:0.3rem 0 0;">Edit before sending if you want to steer the week.</p>
+              </div>
+            </div>
+            <label class="field">
+              <span>ChatGPT prompt</span>
+              <textarea id="meal-prompt"></textarea>
+            </label>
+          </div>
+        </div>
+
+        <div class="meal-output" id="meal-output">
+          <div class="section-head">
+            <div>
+              <h3>This Week's Plan</h3>
+              <p class="subtle" id="meal-output-subtle" style="margin:0.3rem 0 0;">Nothing generated yet.</p>
+            </div>
+          </div>
+
+          <div id="meal-stream" class="stream-box" hidden aria-live="polite"></div>
+          <div id="meal-plan-empty" class="empty-state">Open the prompt in ChatGPT, then paste the result back here to see 7 daily cards, a categorized grocery list, Sunday prep, and dressings.</div>
+          <div id="meal-plan-structured" hidden>
+            <div class="meal-plan-grid" id="meal-day-cards"></div>
+
+            <details class="collapsible" open>
+              <summary class="collapse-summary">
+                <div>
+                  <strong>Grocery List</strong>
+                </div>
+                <div class="meta">Grouped by category</div>
+              </summary>
+              <div class="collapse-body" id="grocery-list"></div>
+            </details>
+
+            <details class="collapsible">
+              <summary class="collapse-summary">
+                <div>
+                  <strong>Sunday Prep List</strong>
+                </div>
+                <div class="meta">Under 45 minutes</div>
+              </summary>
+              <div class="collapse-body" id="prep-list"></div>
+            </details>
+
+            <details class="collapsible">
+              <summary class="collapse-summary">
+                <div>
+                  <strong>Dressing Recipes</strong>
+                </div>
+                <div class="meta">Five rotations</div>
+              </summary>
+              <div class="collapse-body" id="dressing-list"></div>
+            </details>
+
+            <p class="footer-note" id="meal-generated-note"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="celebration-overlay" id="celebration-overlay" aria-hidden="true">
+    <div class="celebration-burst">
+      <div class="celebration-confetti" id="celebration-confetti"></div>
+      <div class="celebration-ring"></div>
+      <div class="celebration-core">
+        <strong>Day Complete</strong>
+        <span>Everything is checked off.</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@0.577.0/dist/umd/lucide.min.js"></script>
+  <script>
+    const CHALLENGE_START = new Date("2026-03-30T00:00:00");
+    const CHALLENGE_DAYS = 75;
+    const CHALLENGE_END = new Date("2026-06-13T00:00:00");
+    const APP_TODAY = new Date("2026-03-29T00:00:00");
+    const HABIT_GROUPS = [
+      "Workout",
+      "Knowledge Base",
+      "Meditation",
+      "Protein",
+      "Supplements",
+      { label: "Skincare", subRows: ["AM", "PM"] },
+      "No Sugar",
+      "Journal Entry",
+      "Progress Photo",
+      "Cheat Meals"
+    ];
+    const HABIT_KEY_MAP = {
+      Workout: "workout",
+      "Knowledge Base": "knowledge-base",
+      Meditation: "meditation",
+      Protein: "protein",
+      Supplements: "supplements",
+      "Skincare AM": "skincare-am",
+      "Skincare PM": "skincare-pm",
+      "No Sugar": "no-sugar",
+      "Journal Entry": "journal-entry",
+      "Progress Photo": "progress-photo",
+      "Cheat Meals": "cheat-meals"
+    };
+    const HABIT_TARGETS = {
+      workout: 5,
+      "knowledge-base": 7,
+      meditation: 5,
+      protein: 7,
+      supplements: 7,
+      "skincare-am": 7,
+      "skincare-pm": 7,
+      "no-sugar": 7,
+      "journal-entry": 1,
+      "progress-photo": 7,
+      "cheat-meals": 2
+    };
+
+    const MACRO_TARGETS = {
+      calories: 1850,
+      protein: 138,
+      carbs: 195,
+      fat: 58
+    };
+
+    const MEALS = ["Breakfast", "Lunch", "Snack", "Dinner"];
+    const STORAGE_KEYS = {
+      mealPrompt: "meal-planner-prompt",
+      mealAdjustments: "meal-planner-adjustments",
+      mealImportText: "meal-planner-import-text",
+      mealPlan: "meal-plan-current"
+    };
+
+    const BASE_PROMPT = `I need a 7-day meal plan and grocery list. Here is my profile: 35F, 5'4", 69kg, sedentary desk job, 4x strength training/week (~250 cal burn each). PCOS, reversing insulin resistance. Air fryer cooking, max 45 min, cook-once-eat-twice (dinner = next day lunch). Targets: 1,850 cal · 138g protein · 195g carbs · 58g fat. Always pair carbs with protein 2:1. Approved proteins: chicken breast (max 2x/week), eggs, egg whites, tofu, paneer (occasional), pea protein, red/green lentils, chickpeas, black/white/mixed beans, edamame. Grains: quinoa, brown rice, whole grain sourdough, oats, rice cakes. Produce: spinach, kale, broccoli, zucchini, bell peppers, cucumber, cherry tomatoes, sweet potato, avocado, banana, berries, lemons, garlic, ginger, onions, coriander, cabbage. Fats: olive oil spray, sesame oil, almond butter, mixed nuts, chia seeds, flaxseeds, tahini, hummus, light coconut milk, avocado. Pantry: low sodium soy sauce, ACV, dijon mustard, canned tomatoes, coconut aminos. Never include: dairy (except paneer), chicken dal, refined carbs alone, high sugar foods. Breakfast fixed daily: pea protein shake + ½ banana + chia or flax alternating = 350 cal/30p/32c/6f. Chicken nights 2x/week: big meal-sized salad, rotate dressings. Non-chicken nights 5x/week: rotate tofu, lentil, paneer, egg, chickpea dishes across Indian/Mediterranean/Asian cuisines. Snack daily: egg whites + hummus + veg or nuts or avocado + rice cake = 190–220 cal/22–26g protein. Format each day: Breakfast · Lunch (leftover ref) · Snack (exact quantities) · Dinner (exact quantities + air fryer temp/time + makes 2 portions). End with: full grocery list by category, Sunday prep list under 45 min, 5 dressing recipes. Avoid repeating: [TYPE LAST WEEK'S DINNERS HERE].`;
+    const DAILY_QUOTES = [
+      { text: "Consistency is a vote for the person you are becoming.", author: "Daily Reminder" },
+      { text: "Small steps, repeated with care, turn into a life that feels different.", author: "Daily Reminder" },
+      { text: "Discipline gets easier when your future self feels close enough to protect.", author: "Focus Note" },
+      { text: "A calm routine can be more powerful than a dramatic burst of motivation.", author: "Daily Reminder" },
+      { text: "You do not need a perfect day. You need another honest one.", author: "Momentum Note" },
+      { text: "The quiet habits you keep are the architecture of your confidence.", author: "Momentum Note" },
+      { text: "Every box you check is proof that you can trust yourself a little more.", author: "Focus Note" },
+      { text: "Progress often looks ordinary while it is happening and extraordinary in hindsight.", author: "Daily Reminder" },
+      { text: "Your routines are not chores today; they are care for the version of you arriving next.", author: "Momentum Note" },
+      { text: "Make the day simple: show up, do the next thing, and let that be enough.", author: "Focus Note" },
+      { text: "What feels repetitive today is often what becomes transformational later.", author: "Focus Note" },
+      { text: "Steady effort is a kind of self-respect you can see by the end of the week.", author: "Daily Reminder" }
+    ];
+
+    let appState = {
+      activeTab: "habit-panel",
+      habitView: "week",
+      habitFocusDate: formatDateInput(CHALLENGE_START),
+      currentNutritionDate: formatDateInput(APP_TODAY),
+      mealPlanData: loadJSON(STORAGE_KEYS.mealPlan, null)
+    };
+
+    const els = {};
+    let celebrationTimer = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      cacheElements();
+      bootTabs();
+      bootHabitTracker();
+      bootNutritionTracker();
+      bootMealPlanner();
+    });
+
+    function cacheElements() {
+      els.tabButtons = [...document.querySelectorAll(".tab-btn")];
+      els.panels = [...document.querySelectorAll(".panel")];
+      els.habitTables = document.getElementById("habit-tables");
+      els.habitProgressLabel = document.getElementById("habit-progress-label");
+      els.habitProgressFill = document.getElementById("habit-progress-fill");
+      els.habitDateSpan = document.getElementById("habit-date-span");
+      els.habitQuoteText = document.getElementById("habit-quote-text");
+      els.habitHeaderSnapshot = document.getElementById("habit-header-snapshot");
+      els.habitSummary = document.getElementById("habit-summary");
+      els.habitWeekRange = document.getElementById("habit-week-range");
+      els.habitPrintBtn = document.getElementById("habit-print-btn");
+      els.habitViewToggle = document.getElementById("habit-view-toggle");
+      els.habitPrevBtn = document.getElementById("habit-prev-btn");
+      els.habitTodayBtn = document.getElementById("habit-today-btn");
+      els.habitNextBtn = document.getElementById("habit-next-btn");
+      els.habitViewLabel = document.getElementById("habit-view-label");
+      els.habitRangeTitle = document.getElementById("habit-range-title");
+      els.habitRangeSubtle = document.getElementById("habit-range-subtle");
+      els.nutritionDate = document.getElementById("nutrition-date");
+      els.nutritionDateLabel = document.getElementById("nutrition-date-label");
+      els.nutritionMeals = document.getElementById("nutrition-meals");
+      els.macroGrid = document.getElementById("macro-grid");
+      els.mealPrompt = document.getElementById("meal-prompt");
+      els.mealAdjustments = document.getElementById("meal-adjustments");
+      els.mealImportText = document.getElementById("meal-import-text");
+      els.generatePlanBtn = document.getElementById("generate-plan-btn");
+      els.copyPromptBtn = document.getElementById("copy-prompt-btn");
+      els.importPlanBtn = document.getElementById("import-plan-btn");
+      els.mealStatus = document.getElementById("meal-status");
+      els.mealOutputSubtle = document.getElementById("meal-output-subtle");
+      els.mealStream = document.getElementById("meal-stream");
+      els.mealPlanEmpty = document.getElementById("meal-plan-empty");
+      els.mealPlanStructured = document.getElementById("meal-plan-structured");
+      els.mealDayCards = document.getElementById("meal-day-cards");
+      els.groceryList = document.getElementById("grocery-list");
+      els.prepList = document.getElementById("prep-list");
+      els.dressingList = document.getElementById("dressing-list");
+      els.mealGeneratedNote = document.getElementById("meal-generated-note");
+      els.copyPlanBtn = document.getElementById("copy-plan-btn");
+      els.mealPrintBtn = document.getElementById("meal-print-btn");
+      els.celebrationOverlay = document.getElementById("celebration-overlay");
+      els.celebrationConfetti = document.getElementById("celebration-confetti");
+      buildCelebrationConfetti();
+    }
+
+    function bootTabs() {
+      els.tabButtons.forEach((button) => {
+        button.addEventListener("click", () => setActiveTab(button.dataset.tab));
+      });
+      setActiveTab(appState.activeTab);
+    }
+
+    function setActiveTab(panelId) {
+      appState.activeTab = panelId;
+      els.tabButtons.forEach((button) => {
+        const isActive = button.dataset.tab === panelId;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-selected", String(isActive));
+        button.setAttribute("tabindex", isActive ? "0" : "-1");
+      });
+      els.panels.forEach((panel) => {
+        const isActive = panel.id === panelId;
+        panel.classList.toggle("active", isActive);
+        panel.hidden = !isActive;
+      });
+    }
+
+    function bootHabitTracker() {
+      els.habitViewToggle.querySelectorAll("[data-view]").forEach((button) => {
+        button.addEventListener("click", () => {
+          appState.habitView = button.dataset.view;
+          renderHabitTracker();
+        });
+      });
+      els.habitPrevBtn.addEventListener("click", () => shiftHabitFocus(-1));
+      els.habitNextBtn.addEventListener("click", () => shiftHabitFocus(1));
+      els.habitTodayBtn.addEventListener("click", () => {
+        appState.habitFocusDate = formatDateInput(CHALLENGE_START);
+        renderHabitTracker();
+      });
+      renderHabitTracker();
+      els.habitPrintBtn.addEventListener("click", () => printMode("habit"));
+    }
+
+    function renderHabitTracker() {
+      const focusDate = clampToChallengeWindow(stripTime(parseInputDate(appState.habitFocusDate)));
+      const today = stripTime(APP_TODAY);
+      const currentDayNumber = getChallengeDay(today);
+      const progressDay = clamp(currentDayNumber, 0, CHALLENGE_DAYS);
+      const progressPct = (progressDay / CHALLENGE_DAYS) * 100;
+      const quote = getQuoteOfTheDay(today);
+      els.habitProgressLabel.textContent = `Day ${progressDay} of ${CHALLENGE_DAYS}`;
+      els.habitProgressFill.style.width = `${progressPct}%`;
+      els.habitDateSpan.textContent = formatLongDate(today);
+      els.habitQuoteText.textContent = `"${quote.text}"`;
+      renderHabitHeaderSnapshot(today, focusDate);
+      document.getElementById("habit-progressbar").setAttribute("aria-valuenow", String(progressDay));
+
+      els.habitViewToggle.querySelectorAll("[data-view]").forEach((button) => {
+        const isActive = button.dataset.view === appState.habitView;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-selected", String(isActive));
+      });
+
+      if (appState.habitView === "month") {
+        els.habitViewLabel.textContent = "Month View";
+        els.habitRangeTitle.textContent = "Day 1 to Day 75";
+        els.habitRangeSubtle.textContent = "Full challenge calendar from Monday, March 30, 2026 to Saturday, June 13, 2026.";
+        els.habitTables.innerHTML = renderHabitMonthView(focusDate);
+      } else if (appState.habitView === "week") {
+        const weekStart = startOfWeek(focusDate);
+        const weekEnd = addDays(weekStart, 6);
+        els.habitViewLabel.textContent = "Week View";
+        els.habitRangeTitle.textContent = `${formatLongDate(weekStart)} - ${formatLongDate(weekEnd)}`;
+        els.habitRangeSubtle.textContent = "A focused weekly grid for all habits. Click any active square to toggle it.";
+        els.habitTables.innerHTML = renderHabitWeekView(focusDate);
+      } else {
+        els.habitViewLabel.textContent = "Day View";
+        els.habitRangeTitle.textContent = formatLongDate(focusDate);
+        els.habitRangeSubtle.textContent = "A clean daily checklist for the selected challenge day.";
+        els.habitTables.innerHTML = renderHabitDayView(focusDate);
+      }
+
+      bindHabitInteractions();
+      renderHabitSummary(focusDate);
+      refreshLucideIcons();
+    }
+
+    function toggleHabitCell(cell) {
+      const habitKey = cell.dataset.habitKey;
+      const date = cell.dataset.date;
+      if (!habitKey || !date) return;
+      const targetDate = parseInputDate(date);
+      const beforeStats = challengeDateStats(targetDate);
+      const key = `${habitKey}-${date}`;
+      const next = localStorage.getItem(key) === "1" ? "0" : "1";
+      localStorage.setItem(key, next);
+      const afterStats = challengeDateStats(targetDate);
+      if (beforeStats.total > 0 && beforeStats.completed !== beforeStats.total && afterStats.completed === afterStats.total) {
+        triggerCelebration();
+      }
+      renderHabitTracker();
+    }
+
+    function renderHabitSummary(focusDate) {
+      const weekStart = startOfWeek(focusDate);
+      const weekEnd = addDays(weekStart, 6);
+      els.habitWeekRange.textContent = `${formatShortDate(weekStart)} - ${formatShortDate(weekEnd)}`;
+      const habits = Object.entries(HABIT_TARGETS).map(([habitKey, target]) => {
+        let count = 0;
+        for (let i = 0; i < 7; i += 1) {
+          const date = addDays(weekStart, i);
+          const iso = formatDateInput(date);
+          if (localStorage.getItem(`${habitKey}-${iso}`) === "1") count += 1;
+        }
+        return { habitKey, label: habitLabel(habitKey), count, target };
+      });
+
+      els.habitSummary.innerHTML = habits.map((item) => `
+        <div class="summary-item">
+          <strong><span class="habit-inline"><span class="habit-icon" aria-hidden="true">${renderHabitIllustration(item.habitKey)}</span><span>${item.label}</span></span></strong>
+          <span>${item.count}/${item.target} this week</span>
+        </div>
+      `).join("");
+    }
+
+    function renderHabitHeaderSnapshot(today, focusDate) {
+      const todayStats = challengeDateStats(today);
+      const weekPace = weekTargetProgress(today);
+      const overall = overallChallengeMomentum(today);
+      const cards = [
+        {
+          label: "Today",
+          value: todayStats.inChallenge ? `${todayStats.completed}/${todayStats.total}` : "Not started",
+          note: todayStats.inChallenge
+            ? (todayStats.completed === todayStats.total ? "All habits complete today." : `${todayStats.total - todayStats.completed} left to close the day.`)
+            : "Challenge begins March 30.",
+          tone: todayStats.inChallenge && todayStats.completed === todayStats.total ? "on-track" : ""
+        },
+        {
+          label: "Week Pace",
+          value: weekPace.value,
+          note: weekPace.note,
+          tone: weekPace.tone
+        },
+        {
+          label: "Overall",
+          value: overall.value,
+          note: overall.note,
+          tone: overall.tone
+        }
+      ];
+
+      els.habitHeaderSnapshot.innerHTML = cards.map((card) => `
+        <div class="snapshot-card ${card.tone}">
+          <div class="snapshot-label">${card.label}</div>
+          <div class="snapshot-value">${card.value}</div>
+          <div class="snapshot-note">${card.note}</div>
+        </div>
+      `).join("");
+    }
+
+    function bindHabitInteractions() {
+      els.habitTables.querySelectorAll("[data-habit-key]").forEach((cell) => {
+        cell.addEventListener("click", () => toggleHabitCell(cell));
+      });
+
+      els.habitTables.querySelectorAll("[data-select-date]").forEach((button) => {
+        button.addEventListener("click", () => {
+          appState.habitFocusDate = button.dataset.selectDate;
+          if (button.dataset.switchView) appState.habitView = button.dataset.switchView;
+          renderHabitTracker();
+        });
+      });
+    }
+
+    function renderHabitMonthView(focusDate) {
+      const sections = [];
+      let currentMonth = new Date(CHALLENGE_START.getFullYear(), CHALLENGE_START.getMonth(), 1);
+      const finalMonth = new Date(CHALLENGE_END.getFullYear(), CHALLENGE_END.getMonth(), 1);
+
+      while (currentMonth <= finalMonth) {
+        const monthStart = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+        const monthEnd = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+        const visibleStart = currentMonth.getFullYear() === CHALLENGE_START.getFullYear() && currentMonth.getMonth() === CHALLENGE_START.getMonth()
+          ? stripTime(CHALLENGE_START)
+          : stripTime(monthStart);
+        const visibleEnd = currentMonth.getFullYear() === CHALLENGE_END.getFullYear() && currentMonth.getMonth() === CHALLENGE_END.getMonth()
+          ? stripTime(CHALLENGE_END)
+          : stripTime(monthEnd);
+        const cells = [];
+
+        for (let i = 0; i <= daysBetween(visibleStart, visibleEnd); i += 1) {
+          const date = addDays(visibleStart, i);
+          const iso = formatDateInput(date);
+          const stats = challengeDateStats(date);
+          cells.push(`
+            <button type="button" class="month-day ${isWeekend(date) ? "weekend" : ""} ${iso === appState.habitFocusDate ? "selected" : ""} ${iso === formatDateInput(stripTime(APP_TODAY)) ? "today" : ""}" data-select-date="${iso}" data-switch-view="day" aria-label="Open ${formatLongDate(date)} day view">
+              <div class="month-day-head">
+                <div>
+                  <div class="day-tag">${date.toLocaleDateString(undefined, { weekday: "short" })}</div>
+                  <strong>${date.getDate()}</strong>
+                </div>
+                <span class="day-tag">Day ${getChallengeDay(date)}</span>
+              </div>
+              <div class="day-progress">
+                <div class="mini-bar"><span style="width:${stats.percent}%;"></span></div>
+                <p>${stats.completed}/${stats.total} checks completed</p>
+              </div>
+            </button>
+          `);
+        }
+
+        sections.push(`
+          <div class="tracker-block">
+            <div class="section-head">
+              <div>
+                <h3>${monthStart.toLocaleDateString(undefined, { month: "long", year: "numeric" })}</h3>
+                <p class="subtle" style="margin:0.3rem 0 0;">${formatShortDate(visibleStart)} to ${formatShortDate(visibleEnd)}</p>
+              </div>
+            </div>
+            <div class="month-grid" style="margin-bottom:0.75rem;">
+              ${["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => `<div class="weekday-chip">${day}</div>`).join("")}
+            </div>
+            <div class="month-grid">${cells.join("")}</div>
+          </div>
+        `);
+
+        currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
+      }
+
+      return sections.join("");
+    }
+
+    function renderHabitWeekView(focusDate) {
+      const weekStart = startOfWeek(focusDate);
+      const days = Array.from({ length: 7 }, (_, index) => addDays(weekStart, index));
+      const headers = days.map((date) => {
+        const iso = formatDateInput(date);
+        const selected = iso === appState.habitFocusDate ? "selected" : "";
+        return `
+          <button type="button" class="week-day-head ${isWeekend(date) ? "weekend" : ""} ${selected}" data-select-date="${iso}" data-switch-view="day" aria-label="Open day view for ${formatLongDate(date)}">
+            <strong>${date.toLocaleDateString(undefined, { weekday: "short" })}</strong>
+            <span class="mono">${formatShortDate(date)}</span>
+            <span class="day-tag">${date >= CHALLENGE_START && date <= CHALLENGE_END ? `Day ${getChallengeDay(date)}` : "Off challenge"}</span>
+          </button>
+        `;
+      }).join("");
+
+      const rows = habitEntries().map((entry) => {
+        const label = `
+          <div class="week-habit-label">
+            <strong><span class="habit-inline"><span class="habit-icon" aria-hidden="true">${renderHabitIllustration(entry.habitKey)}</span><span>${entry.label}</span></span></strong>
+            <small>${entry.trackLabel}</small>
+          </div>
+        `;
+        const cells = days.map((date) => {
+          const iso = formatDateInput(date);
+          const state = habitCellState(entry.habitKey, date);
+          return `
+            <button type="button" class="week-cell ${entry.isSub ? "sub" : ""} ${state.active ? "" : "inactive"} ${state.checked ? "checked" : ""} ${iso === appState.habitFocusDate ? "selected" : ""}" ${state.active ? `data-habit-key="${entry.habitKey}" data-date="${iso}" aria-pressed="${state.checked}" aria-label="${entry.label} ${entry.trackLabel} on ${formatLongDate(date)}"` : `data-select-date="${iso}" aria-label="Select ${formatLongDate(date)}"`} ${state.active ? "" : ""}>
+            </button>
+          `;
+        }).join("");
+        return label + cells;
+      }).join("");
+
+      return `
+        <div class="tracker-block">
+          <div class="week-view-grid">
+            <div class="week-habit-label">
+              <strong>Habit</strong>
+              <small>Track</small>
+            </div>
+            ${headers}
+            ${rows}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHabitDayView(focusDate) {
+      const iso = formatDateInput(focusDate);
+      const stats = challengeDateStats(focusDate);
+      const entries = habitEntries();
+      return `
+        <div class="day-view">
+          <div class="day-summary-card">
+            <div>
+              <h3>${formatLongDate(focusDate)}</h3>
+              <p class="subtle" style="margin:0.3rem 0 0;">${focusDate >= CHALLENGE_START && focusDate <= CHALLENGE_END ? `Challenge day ${getChallengeDay(focusDate)} with ${stats.completed}/${stats.total} checks done.` : "This date is outside the challenge window."}</p>
+            </div>
+            <div class="macro-chip">${stats.completed}/${stats.total} habits complete</div>
+          </div>
+          <div class="habit-checklist">
+            ${entries.map((entry) => {
+              const state = habitCellState(entry.habitKey, focusDate);
+              return `
+                <div class="habit-check-card">
+                  <div class="habit-check-main">
+                    <strong><span class="habit-inline"><span class="habit-icon" aria-hidden="true">${renderHabitIllustration(entry.habitKey)}</span><span>${entry.label}</span></span></strong>
+                    <small>${entry.trackLabel}</small>
+                  </div>
+                  <div class="habit-toggle-row">
+                    <button type="button" class="habit-toggle ${state.checked ? "checked" : ""} ${state.active ? "" : "inactive"}" ${state.active ? `data-habit-key="${entry.habitKey}" data-date="${iso}" aria-pressed="${state.checked}" aria-label="${entry.label} ${entry.trackLabel} on ${formatLongDate(focusDate)}"` : "disabled aria-disabled=\"true\""}>${state.active ? (state.checked ? "Done" : "Mark done") : "Inactive"}</button>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function habitLabel(habitKey) {
+      return Object.entries(HABIT_KEY_MAP).find(([, key]) => key === habitKey)?.[0] || habitKey;
+    }
+
+    function renderHabitIllustration(habitKey) {
+      const key = String(habitKey || "");
+      const iconMap = {
+        "workout": "dumbbell",
+        "knowledge-base": "book-open",
+        "meditation": "sparkles",
+        "protein": "apple",
+        "supplements": "pill",
+        "skincare-am": "sun",
+        "skincare-pm": "moon",
+        "no-sugar": "ban",
+        "journal-entry": "notebook-pen",
+        "progress-photo": "camera",
+        "cheat-meals": "utensils-crossed"
+      };
+      return `<i data-lucide="${iconMap[key] || "circle"}"></i>`;
+    }
+
+    function refreshLucideIcons() {
+      if (window.lucide?.createIcons) {
+        window.lucide.createIcons({
+          attrs: {
+            width: "18",
+            height: "18",
+            stroke: "#203a67",
+            "stroke-width": "1.8"
+          }
+        });
+      }
+    }
+
+    function habitEntries() {
+      const entries = [];
+      HABIT_GROUPS.forEach((row) => {
+        if (typeof row === "string") {
+          entries.push({
+            label: row,
+            habitKey: HABIT_KEY_MAP[row],
+            trackLabel: row === "Cheat Meals" ? "Friday / Saturday only" : "Daily",
+            isSub: false
+          });
+          return;
+        }
+        row.subRows.forEach((sub) => {
+          const fullLabel = `${row.label} ${sub}`;
+          entries.push({
+            label: row.label,
+            habitKey: HABIT_KEY_MAP[fullLabel],
+            trackLabel: sub,
+            isSub: true
+          });
+        });
+      });
+      return entries;
+    }
+
+    function habitCellState(habitKey, date) {
+      const iso = formatDateInput(date);
+      const label = habitLabel(habitKey);
+      const isCheat = habitKey === "cheat-meals";
+      const inChallenge = date >= CHALLENGE_START && date <= CHALLENGE_END;
+      const active = inChallenge && (!isCheat || [5, 6].includes(date.getDay()));
+      const checked = localStorage.getItem(`${habitKey}-${iso}`) === "1";
+      return { active, checked, label, iso };
+    }
+
+    function challengeDateStats(date) {
+      const inChallenge = date >= CHALLENGE_START && date <= CHALLENGE_END;
+      const entries = habitEntries();
+      const activeEntries = entries.filter((entry) => habitCellState(entry.habitKey, date).active);
+      const completed = activeEntries.filter((entry) => habitCellState(entry.habitKey, date).checked).length;
+      const total = activeEntries.length;
+      return {
+        inChallenge,
+        completed,
+        total,
+        percent: total ? Math.round((completed / total) * 100) : 0
+      };
+    }
+
+    function weekTargetProgress(date) {
+      const weekStart = startOfWeek(date);
+      let workoutCount = 0;
+      let meditationCount = 0;
+      let journalCount = 0;
+      for (let i = 0; i < 7; i += 1) {
+        const iso = formatDateInput(addDays(weekStart, i));
+        if (localStorage.getItem(`workout-${iso}`) === "1") workoutCount += 1;
+        if (localStorage.getItem(`meditation-${iso}`) === "1") meditationCount += 1;
+        if (localStorage.getItem(`journal-entry-${iso}`) === "1") journalCount += 1;
+      }
+      const targetHits = [workoutCount >= 5, meditationCount >= 5, journalCount >= 1].filter(Boolean).length;
+      return {
+        value: `${targetHits}/3 on track`,
+        note: `Workout ${workoutCount}/5 · Meditation ${meditationCount}/5 · Journal ${journalCount}/1`,
+        tone: targetHits >= 2 ? "on-track" : targetHits === 1 ? "" : "caution"
+      };
+    }
+
+    function overallChallengeMomentum(today) {
+      if (today < CHALLENGE_START) {
+        return {
+          value: "Ready",
+          note: "Your 75-day challenge countdown is set.",
+          tone: ""
+        };
+      }
+
+      const elapsed = Math.min(daysBetween(CHALLENGE_START, today) + 1, CHALLENGE_DAYS);
+      let completeDays = 0;
+      for (let i = 0; i < elapsed; i += 1) {
+        const date = addDays(CHALLENGE_START, i);
+        const stats = challengeDateStats(date);
+        if (stats.total > 0 && stats.completed === stats.total) completeDays += 1;
+      }
+      const ratio = elapsed ? completeDays / elapsed : 0;
+      return {
+        value: ratio >= 0.7 ? "On track" : ratio >= 0.45 ? "Building" : "Catch up",
+        note: `${completeDays} fully completed day${completeDays === 1 ? "" : "s"} out of ${elapsed} active day${elapsed === 1 ? "" : "s"}.`,
+        tone: ratio >= 0.7 ? "on-track" : ratio < 0.45 ? "caution" : ""
+      };
+    }
+
+    function monthDayInsight(date) {
+      const stats = challengeDateStats(date);
+      if (!stats.inChallenge) return "Outside the active tracker dates.";
+      if (stats.percent === 100) return "Everything checked off.";
+      if (stats.percent >= 70) return "Strong day with just a few items left.";
+      if (stats.percent >= 35) return "A good foundation is in place.";
+      return "Fresh slate for today.";
+    }
+
+    function shiftHabitFocus(direction) {
+      const current = clampToChallengeWindow(stripTime(parseInputDate(appState.habitFocusDate)));
+      let next;
+      if (appState.habitView === "month") {
+        next = new Date(current.getFullYear(), current.getMonth() + direction, 1);
+      } else if (appState.habitView === "week") {
+        next = addDays(current, direction * 7);
+      } else {
+        next = addDays(current, direction);
+      }
+      appState.habitFocusDate = formatDateInput(clampToChallengeWindow(next));
+      renderHabitTracker();
+    }
+
+    function clampToChallengeWindow(date) {
+      if (date < CHALLENGE_START) return stripTime(CHALLENGE_START);
+      if (date > CHALLENGE_END) return stripTime(CHALLENGE_END);
+      return stripTime(date);
+    }
+
+    function getQuoteOfTheDay(date) {
+      const serial = Math.floor(stripTime(date).getTime() / 86400000);
+      return DAILY_QUOTES[((serial % DAILY_QUOTES.length) + DAILY_QUOTES.length) % DAILY_QUOTES.length];
+    }
+
+    function buildCelebrationConfetti() {
+      if (!els.celebrationConfetti) return;
+      const pieces = Array.from({ length: 18 }, (_, index) => {
+        const angle = `${index * 20}deg`;
+        const delay = `${(index % 6) * 0.03}s`;
+        return `<span style="--angle:${angle}; animation-delay:${delay};"></span>`;
+      }).join("");
+      els.celebrationConfetti.innerHTML = pieces;
+    }
+
+    function triggerCelebration() {
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (!els.celebrationOverlay) return;
+      els.celebrationOverlay.classList.remove("active");
+      void els.celebrationOverlay.offsetWidth;
+      els.celebrationOverlay.classList.add("active");
+      window.clearTimeout(celebrationTimer);
+      celebrationTimer = window.setTimeout(() => {
+        els.celebrationOverlay.classList.remove("active");
+      }, 2000);
+    }
+
+    function challengeDays() {
+      const days = [];
+      for (let i = 0; i < CHALLENGE_DAYS; i += 1) {
+        const date = addDays(CHALLENGE_START, i);
+        days.push({
+          date,
+          iso: formatDateInput(date),
+          weekdayInitial: formatWeekdayInitial(date),
+          monthShort: date.toLocaleString(undefined, { month: "short" }),
+          isFirstOfMonth: date.getDate() === 1
+        });
+      }
+      return days;
+    }
+
+    function getChallengeDay(date) {
+      const diff = daysBetween(CHALLENGE_START, date);
+      if (diff < 0) return 0;
+      if (diff >= CHALLENGE_DAYS) return CHALLENGE_DAYS;
+      return diff + 1;
+    }
+
+    function bootNutritionTracker() {
+      els.nutritionDate.value = appState.currentNutritionDate;
+      els.nutritionDate.addEventListener("change", () => {
+        appState.currentNutritionDate = els.nutritionDate.value;
+        renderNutritionTracker();
+      });
+      renderNutritionTracker();
+    }
+
+    function renderNutritionTracker() {
+      const date = parseInputDate(appState.currentNutritionDate);
+      els.nutritionDateLabel.textContent = formatLongDate(date);
+      renderMacroCards(date);
+      renderMealSections(date);
+    }
+
+    function renderMacroCards(date) {
+      const totals = calculateDailyTotals(date);
+      const data = [
+        ["Calories", "calories", totals.calories, MACRO_TARGETS.calories, ""],
+        ["Protein", "protein", totals.protein, MACRO_TARGETS.protein, "g"],
+        ["Carbs", "carbs", totals.carbs, MACRO_TARGETS.carbs, "g"],
+        ["Fat", "fat", totals.fat, MACRO_TARGETS.fat, "g"]
+      ];
+
+      els.macroGrid.innerHTML = data.map(([label, key, value, target, unit]) => {
+        const pct = Math.min((value / target) * 100, 100);
+        const fillClass = value > target ? "over" : value >= target * 0.9 ? "warn" : "";
+        return `
+          <div class="macro-card">
+            <div class="macro-top">
+              <strong>${label}</strong>
+              <span>${Math.round(value)} / ${target}${unit}</span>
+            </div>
+            <div class="macro-track" role="progressbar" aria-label="${label}" aria-valuemin="0" aria-valuemax="${target}" aria-valuenow="${Math.round(value)}">
+              <div class="macro-fill ${fillClass}" style="width:${pct}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderMealSections(date) {
+      const iso = formatDateInput(date);
+      els.nutritionMeals.innerHTML = MEALS.map((meal) => {
+        const items = getMealItems(iso, meal);
+        const warnings = mealWarnings(items);
+        const mealTotals = sumItems(items);
+        const isOpen = meal === "Breakfast";
+
+        return `
+          <details class="meal-section" data-meal="${meal}" ${isOpen ? "open" : ""}>
+            <summary class="meal-summary">
+              <div>
+                <strong>${meal}</strong>
+                <div class="day-date">${items.length} item${items.length === 1 ? "" : "s"}</div>
+              </div>
+              <div class="meta">${Math.round(mealTotals.calories)} cal · ${Math.round(mealTotals.protein)}p · ${Math.round(mealTotals.carbs)}c · ${Math.round(mealTotals.fat)}f</div>
+            </summary>
+            <div class="meal-body">
+              <div class="inline-actions">
+                <button type="button" class="secondary add-food-btn" data-meal="${meal}" data-date="${iso}">Add food</button>
+              </div>
+              <div class="nutrition-items">
+                ${items.map((item) => renderNutritionItem(item, meal, iso)).join("") || `<div class="empty-state">No items logged for ${meal.toLowerCase()} yet.</div>`}
+              </div>
+              ${warnings.map((warning) => `<div class="warning" role="alert">${warning}</div>`).join("")}
+              <div class="inline-form" id="form-${meal}-${iso}" hidden>
+                <div class="compact-grid">
+                  <input type="text" name="name" placeholder="Food name" aria-label="Food name" />
+                  <input type="number" step="1" min="0" name="calories" placeholder="Calories" aria-label="Calories" />
+                  <input type="number" step="0.1" min="0" name="protein" placeholder="Protein" aria-label="Protein grams" />
+                  <input type="number" step="0.1" min="0" name="carbs" placeholder="Carbs" aria-label="Carbs grams" />
+                  <input type="number" step="0.1" min="0" name="fat" placeholder="Fat" aria-label="Fat grams" />
+                </div>
+                <div class="compact-grid-2">
+                  <input type="text" name="notes" placeholder="Quantity or serving notes" aria-label="Quantity or serving notes" />
+                  <div class="inline-actions">
+                    <button type="button" class="save-food-btn" data-meal="${meal}" data-date="${iso}">Save item</button>
+                    <button type="button" class="secondary cancel-food-btn" data-meal="${meal}" data-date="${iso}">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        `;
+      }).join("");
+
+      bindNutritionActions();
+    }
+
+    function renderNutritionItem(item, meal, iso) {
+      const locked = item.locked ? "locked" : "";
+      return `
+        <div class="nutrition-item ${locked}">
+          <div>
+            <h4>${escapeHtml(item.name)}</h4>
+            <p>${escapeHtml(item.notes || "No notes")}</p>
+          </div>
+          <div class="numbers">${Math.round(item.calories)} cal<br>${Math.round(item.protein)}p · ${Math.round(item.carbs)}c · ${Math.round(item.fat)}f</div>
+          <div>${item.locked ? "" : `<button type="button" class="secondary delete-food-btn" data-meal="${meal}" data-date="${iso}" data-index="${item.storageIndex}" aria-label="Delete ${escapeHtml(item.name)} from ${meal}">Delete</button>`}</div>
+        </div>
+      `;
+    }
+
+    function bindNutritionActions() {
+      document.querySelectorAll(".add-food-btn").forEach((button) => {
+        button.onclick = () => {
+          const form = document.getElementById(`form-${button.dataset.meal}-${button.dataset.date}`);
+          form.hidden = false;
+        };
+      });
+
+      document.querySelectorAll(".cancel-food-btn").forEach((button) => {
+        button.onclick = (event) => {
+          event.preventDefault();
+          const form = document.getElementById(`form-${button.dataset.meal}-${button.dataset.date}`);
+          form.hidden = true;
+          form.querySelectorAll("input").forEach((input) => {
+            input.value = "";
+          });
+        };
+      });
+
+      document.querySelectorAll(".save-food-btn").forEach((button) => {
+        button.onclick = (event) => {
+          event.preventDefault();
+          const { meal, date } = button.dataset;
+          const form = document.getElementById(`form-${meal}-${date}`);
+          const payload = Object.fromEntries([...form.querySelectorAll("input")].map((input) => [input.name, input.value.trim()]));
+          if (!payload.name || payload.calories === "") return;
+          const item = {
+            name: payload.name,
+            calories: Number(payload.calories) || 0,
+            protein: Number(payload.protein) || 0,
+            carbs: Number(payload.carbs) || 0,
+            fat: Number(payload.fat) || 0,
+            notes: payload.notes || ""
+          };
+          const data = loadNutrition(date);
+          data[meal].push(item);
+          saveNutrition(date, data);
+          renderNutritionTracker();
+        };
+      });
+
+      document.querySelectorAll(".delete-food-btn").forEach((button) => {
+        button.onclick = () => {
+          const { meal, date } = button.dataset;
+          const index = Number(button.dataset.index);
+          const data = loadNutrition(date);
+          data[meal].splice(index, 1);
+          saveNutrition(date, data);
+          renderNutritionTracker();
+        };
+      });
+    }
+
+    function calculateDailyTotals(date) {
+      const iso = formatDateInput(date);
+      return MEALS.reduce((acc, meal) => {
+        const totals = sumItems(getMealItems(iso, meal));
+        acc.calories += totals.calories;
+        acc.protein += totals.protein;
+        acc.carbs += totals.carbs;
+        acc.fat += totals.fat;
+        return acc;
+      }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
+    }
+
+    function loadNutrition(iso) {
+      const fallback = {
+        Breakfast: [],
+        Lunch: [],
+        Snack: [],
+        Dinner: []
+      };
+      const raw = loadJSON(`nutrition-${iso}`, fallback);
+      return {
+        Breakfast: Array.isArray(raw.Breakfast) ? raw.Breakfast : [],
+        Lunch: Array.isArray(raw.Lunch) ? raw.Lunch : [],
+        Snack: Array.isArray(raw.Snack) ? raw.Snack : [],
+        Dinner: Array.isArray(raw.Dinner) ? raw.Dinner : []
+      };
+    }
+
+    function saveNutrition(iso, data) {
+      localStorage.setItem(`nutrition-${iso}`, JSON.stringify(data));
+    }
+
+    function getMealItems(iso, meal) {
+      const data = loadNutrition(iso);
+      const customItems = data[meal].map((item, index) => ({ ...item, locked: false, storageIndex: index }));
+      if (meal !== "Breakfast") return customItems;
+      return [fixedBreakfast(iso), ...customItems];
+    }
+
+    function fixedBreakfast(iso) {
+      const date = parseInputDate(iso);
+      const daySerial = Math.floor(stripTime(date).getTime() / 86400000);
+      const addIn = daySerial % 2 === 0 ? "chia" : "flax";
+      return {
+        name: `Pea protein shake + 1/2 banana + ${addIn}`,
+        calories: 350,
+        protein: 30,
+        carbs: 32,
+        fat: 6,
+        notes: `Fixed breakfast. Alternating seed: ${addIn}.`,
+        locked: true,
+        storageIndex: -1
+      };
+    }
+
+    function mealWarnings(items) {
+      const warnings = [];
+      const mealTotals = sumItems(items);
+      if (mealTotals.carbs > 0 && mealTotals.protein === 0) {
+        warnings.push("Pair carbs with protein");
+      }
+      if (items.some((item) => /\b(yogurt|milk|cheese)\b/i.test(item.name))) {
+        warnings.push("Dairy flagged - check if intentional");
+      }
+      return warnings;
+    }
+
+    function sumItems(items) {
+      return items.reduce((acc, item) => {
+        acc.calories += Number(item.calories) || 0;
+        acc.protein += Number(item.protein) || 0;
+        acc.carbs += Number(item.carbs) || 0;
+        acc.fat += Number(item.fat) || 0;
+        return acc;
+      }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
+    }
+
+    function bootMealPlanner() {
+      els.mealPrompt.value = localStorage.getItem(STORAGE_KEYS.mealPrompt) || BASE_PROMPT;
+      els.mealAdjustments.value = localStorage.getItem(STORAGE_KEYS.mealAdjustments) || "";
+      els.mealImportText.value = localStorage.getItem(STORAGE_KEYS.mealImportText) || "";
+
+      els.mealPrompt.addEventListener("input", () => localStorage.setItem(STORAGE_KEYS.mealPrompt, els.mealPrompt.value));
+      els.mealAdjustments.addEventListener("input", () => localStorage.setItem(STORAGE_KEYS.mealAdjustments, els.mealAdjustments.value));
+      els.mealImportText.addEventListener("input", () => localStorage.setItem(STORAGE_KEYS.mealImportText, els.mealImportText.value));
+      els.generatePlanBtn.addEventListener("click", openMealPlanInChatGPT);
+      els.copyPromptBtn.addEventListener("click", copyMealPlannerPrompt);
+      els.importPlanBtn.addEventListener("click", importMealPlanFromChatGPT);
+      els.copyPlanBtn.addEventListener("click", copyPlan);
+      els.mealPrintBtn.addEventListener("click", () => printMode("meal"));
+
+      if (appState.mealPlanData) {
+        renderMealPlan(appState.mealPlanData);
+      }
+    }
+
+    function buildMealPlannerPrompt() {
+      const prompt = els.mealPrompt.value.trim();
+      const adjustments = els.mealAdjustments.value.trim();
+      const weekStart = startOfWeek(APP_TODAY);
+      const visibleWeekStart = formatDateInput(weekStart);
+      const formatInstructions = `You are creating a weekly meal plan for a wellness planner web app.
+Return two parts in this exact order:
+1. A JSON block wrapped in <meal-plan-json> and </meal-plan-json>.
+2. A concise readable summary after the JSON.
+
+The JSON must be valid and match this schema:
+{
+  "week_start": "YYYY-MM-DD",
+  "week_end": "YYYY-MM-DD",
+  "days": [
+    {
+      "day_name": "Monday",
+      "date": "YYYY-MM-DD",
+      "breakfast": "string",
+      "lunch": "string",
+      "snack": "string",
+      "dinner": {
+        "title": "string",
+        "description": "string",
+        "air_fryer": "string",
+        "makes": "string",
+        "macros": { "calories": number, "protein": number, "carbs": number, "fat": number }
+      },
+      "daily_macros": { "calories": number, "protein": number, "carbs": number, "fat": number }
+    }
+  ],
+  "grocery_list": [
+    { "category": "Produce", "items": ["item", "item"] }
+  ],
+  "sunday_prep": ["step", "step"],
+  "dressing_recipes": [
+    { "name": "string", "ingredients": ["item"], "method": "string" }
+  ]
+}
+Do not use markdown code fences anywhere.`;
+
+      return [
+        formatInstructions,
+        "",
+        prompt,
+        "",
+        adjustments ? `Any adjustments this week: ${adjustments}` : "Any adjustments this week: none.",
+        `Please plan for the week starting ${visibleWeekStart}.`
+      ].join("\n");
+    }
+
+    async function copyMealPlannerPrompt() {
+      try {
+        await navigator.clipboard.writeText(buildMealPlannerPrompt());
+        setMealStatus("Prompt copied. Paste it into ChatGPT.");
+      } catch (error) {
+        setMealStatus("Copy failed on this browser.");
+      }
+    }
+
+    async function openMealPlanInChatGPT() {
+      const promptText = buildMealPlannerPrompt();
+      try {
+        await navigator.clipboard.writeText(promptText);
+        setMealStatus("Prompt copied. ChatGPT is opening in a new tab.");
+      } catch (error) {
+        setMealStatus("ChatGPT is opening. If copy did not work, use the Copy Prompt button.");
+      }
+      els.mealStream.hidden = false;
+      els.mealStream.textContent = promptText;
+      els.mealOutputSubtle.textContent = "Prompt prepared for ChatGPT.";
+      window.open("https://chatgpt.com/", "_blank", "noopener");
+    }
+
+    function importMealPlanFromChatGPT() {
+      const rawText = els.mealImportText.value.trim();
+      if (!rawText) {
+        setMealStatus("Paste ChatGPT's response first.");
+        return;
+      }
+
+      const plan = extractPlanData(rawText);
+      if (!plan) {
+        setMealStatus("Could not parse the pasted result. Make sure the <meal-plan-json> block is included.");
+        return;
+      }
+
+      const payload = {
+        ...plan,
+        rawText,
+        generatedAt: new Date().toISOString()
+      };
+      localStorage.setItem(STORAGE_KEYS.mealPlan, JSON.stringify(payload));
+      appState.mealPlanData = payload;
+      renderMealPlan(payload);
+      setMealStatus("ChatGPT plan imported.");
+    }
+
+    function extractPlanData(rawText) {
+      const match = rawText.match(/<meal-plan-json>([\s\S]*?)<\/meal-plan-json>/i);
+      if (!match) return null;
+      try {
+        return JSON.parse(match[1].trim());
+      } catch (error) {
+        console.error("Meal plan JSON parse error", error);
+        return null;
+      }
+    }
+
+    function renderMealPlan(plan) {
+      const days = Array.isArray(plan.days) ? plan.days : [];
+      const groceries = Array.isArray(plan.grocery_list) ? plan.grocery_list : [];
+      const prep = Array.isArray(plan.sunday_prep) ? plan.sunday_prep : [];
+      const dressings = Array.isArray(plan.dressing_recipes) ? plan.dressing_recipes : [];
+
+      els.mealPlanEmpty.hidden = true;
+      els.mealPlanStructured.hidden = false;
+      els.mealStream.hidden = false;
+      els.mealStream.textContent = plan.rawText || "";
+      els.mealOutputSubtle.textContent = `${plan.week_start || "This week"} to ${plan.week_end || ""}`.trim();
+
+      els.mealDayCards.innerHTML = days.map((day, index) => `
+        <article class="meal-day-card">
+          <details ${index === 0 ? "open" : ""}>
+            <summary class="collapse-summary">
+              <div>
+                <strong>${escapeHtml(day.day_name || `Day ${index + 1}`)}</strong>
+                <div class="day-date mono">${escapeHtml(day.date || "")}</div>
+              </div>
+              <div class="meta">${macroLabel(day.daily_macros)}</div>
+            </summary>
+            <div class="collapse-body">
+              <div class="meal-lines">
+                <div class="meal-line"><strong>Breakfast</strong><p>${escapeHtml(day.breakfast || "")}</p></div>
+                <div class="meal-line"><strong>Lunch</strong><p>${escapeHtml(day.lunch || "")}</p></div>
+                <div class="meal-line"><strong>Snack</strong><p>${escapeHtml(day.snack || "")}</p></div>
+                <div class="meal-line">
+                  <strong>Dinner</strong>
+                  <p>${escapeHtml(day.dinner?.title || "")}</p>
+                  <p>${escapeHtml(day.dinner?.description || "")}</p>
+                  <p class="subtle" style="margin-top:0.45rem;">${escapeHtml(day.dinner?.air_fryer || "")} · ${escapeHtml(day.dinner?.makes || "")}</p>
+                  <span class="macro-chip">${macroLabel(day.dinner?.macros)}</span>
+                  <div class="inline-actions" style="margin-top:0.85rem;">
+                    <button type="button" class="secondary send-dinner-btn" data-date="${escapeHtml(day.date || "")}" data-index="${index}" aria-label="Send dinner for ${escapeHtml(day.day_name || `day ${index + 1}`)} to Nutrition Tracker">Send to Nutrition Tracker</button>
+                  </div>
+                </div>
+              </div>
+              <span class="macro-chip">Daily total: ${macroLabel(day.daily_macros)}</span>
+            </div>
+          </details>
+        </article>
+      `).join("");
+
+      els.groceryList.innerHTML = groceries.length ? groceries.map((group) => `
+        <div class="summary-item">
+          <strong>${escapeHtml(group.category || "Category")}</strong>
+          <div class="group-list">${(group.items || []).map((item) => `<span>${escapeHtml(item)}</span>`).join("")}</div>
+        </div>
+      `).join("") : `<div class="empty-state">No grocery list parsed.</div>`;
+
+      els.prepList.innerHTML = prep.length ? `<div class="prep-list">${prep.map((item) => `<div class="summary-item"><strong>${escapeHtml(item)}</strong></div>`).join("")}</div>` : `<div class="empty-state">No prep list parsed.</div>`;
+      els.dressingList.innerHTML = dressings.length ? dressings.map((recipe) => `
+        <div class="summary-item">
+          <strong>${escapeHtml(recipe.name || "Dressing")}</strong>
+          <span>${escapeHtml((recipe.ingredients || []).join(", "))}</span>
+          <div>${escapeHtml(recipe.method || "")}</div>
+        </div>
+      `).join("") : `<div class="empty-state">No dressing recipes parsed.</div>`;
+
+      els.mealGeneratedNote.textContent = plan.generatedAt ? `Generated ${new Date(plan.generatedAt).toLocaleString()}.` : "";
+
+      document.querySelectorAll(".send-dinner-btn").forEach((button) => {
+        button.onclick = () => sendDinnerToNutrition(days[Number(button.dataset.index)]);
+      });
+    }
+
+    function macroLabel(macros) {
+      if (!macros) return "Macros unavailable";
+      return `${Math.round(macros.calories || 0)} cal · ${Math.round(macros.protein || 0)}p · ${Math.round(macros.carbs || 0)}c · ${Math.round(macros.fat || 0)}f`;
+    }
+
+    function sendDinnerToNutrition(day) {
+      if (!day?.date || !day?.dinner?.macros) {
+        setMealStatus("That dinner is missing macro data.");
+        return;
+      }
+      const iso = day.date;
+      const data = loadNutrition(iso);
+      data.Dinner.push({
+        name: day.dinner.title || "Planned dinner",
+        calories: Number(day.dinner.macros.calories) || 0,
+        protein: Number(day.dinner.macros.protein) || 0,
+        carbs: Number(day.dinner.macros.carbs) || 0,
+        fat: Number(day.dinner.macros.fat) || 0,
+        notes: `${day.dinner.description || ""} ${day.dinner.air_fryer || ""}`.trim()
+      });
+      saveNutrition(iso, data);
+      appState.currentNutritionDate = iso;
+      els.nutritionDate.value = iso;
+      renderNutritionTracker();
+      setActiveTab("nutrition-panel");
+      setMealStatus(`Dinner sent to Nutrition Tracker for ${iso}.`);
+    }
+
+    async function copyPlan() {
+      const plan = appState.mealPlanData;
+      if (!plan?.rawText) {
+        setMealStatus("Import a ChatGPT plan first.");
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(plan.rawText);
+        setMealStatus("Full plan copied.");
+      } catch (error) {
+        setMealStatus("Copy failed on this browser.");
+      }
+    }
+
+    function setMealStatus(text) {
+      els.mealStatus.textContent = text;
+    }
+
+    function printMode(mode) {
+      document.body.dataset.printMode = mode;
+      window.print();
+      window.setTimeout(() => {
+        document.body.dataset.printMode = "";
+      }, 300);
+    }
+
+    function loadJSON(key, fallback) {
+      try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+      } catch (error) {
+        console.warn(`Could not parse ${key}`, error);
+        return fallback;
+      }
+    }
+
+    function formatDateInput(date) {
+      const year = date.getFullYear();
+      const month = `${date.getMonth() + 1}`.padStart(2, "0");
+      const day = `${date.getDate()}`.padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function parseInputDate(value) {
+      return new Date(`${value}T00:00:00`);
+    }
+
+    function stripTime(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    function addDays(date, amount) {
+      const copy = new Date(date);
+      copy.setDate(copy.getDate() + amount);
+      return stripTime(copy);
+    }
+
+    function startOfWeek(date) {
+      const copy = stripTime(date);
+      const diff = (copy.getDay() + 6) % 7;
+      copy.setDate(copy.getDate() - diff);
+      return stripTime(copy);
+    }
+
+    function daysBetween(a, b) {
+      const diff = stripTime(b).getTime() - stripTime(a).getTime();
+      return Math.floor(diff / 86400000);
+    }
+
+    function isWeekend(date) {
+      return [0, 6].includes(date.getDay());
+    }
+
+    function formatWeekdayInitial(date) {
+      return ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][date.getDay()];
+    }
+
+    function formatLongDate(date) {
+      return date.toLocaleDateString(undefined, {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric"
+      });
+    }
+
+    function formatShortDate(date) {
+      return date.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric"
+      });
+    }
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+  </script>
+</body>
+</html>
