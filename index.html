@@ -1596,6 +1596,34 @@
       color: var(--muted);
     }
 
+    .cloud-sync {
+      margin-bottom: 1rem;
+      padding: 1.1rem;
+    }
+
+    .cloud-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.75rem;
+      align-items: end;
+    }
+
+    .cloud-meta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 0.9rem;
+    }
+
+    .cloud-badge {
+      padding: 0.55rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(47, 109, 246, 0.10);
+      color: #29415f;
+      font-size: 0.86rem;
+    }
+
     [hidden] {
       display: none !important;
     }
@@ -1604,7 +1632,8 @@
       .habit-layout,
       .split,
       .planner-grid,
-      .settings-grid {
+      .settings-grid,
+      .cloud-grid {
         grid-template-columns: 1fr;
       }
 
@@ -1760,6 +1789,41 @@
   </header>
 
   <main id="main-content">
+    <section class="section-card cloud-sync screen-only">
+      <div class="section-head">
+        <div>
+          <h3>Cloud Sync</h3>
+          <p class="subtle" style="margin:0.3rem 0 0;">Connect Supabase to make habits, nutrition, and meal plans persistent across devices and shared with your friend.</p>
+        </div>
+      </div>
+      <div class="cloud-grid">
+        <label class="field">
+          <span>Email for magic link</span>
+          <input type="email" id="supabase-email" placeholder="you@example.com" />
+        </label>
+        <label class="field">
+          <span>Workspace name</span>
+          <input type="text" id="workspace-name" placeholder="Shared 75 Medium" />
+        </label>
+        <label class="field">
+          <span>Invite code</span>
+          <input type="text" id="workspace-invite-code" placeholder="Paste your friend's code" />
+        </label>
+      </div>
+      <div class="planner-actions" style="margin-top:1rem;">
+        <button type="button" id="send-magic-link-btn" class="secondary">Send magic link</button>
+        <button type="button" id="create-workspace-btn" class="secondary">Create workspace</button>
+        <button type="button" id="join-workspace-btn" class="secondary">Join workspace</button>
+        <button type="button" id="sync-now-btn" class="secondary">Sync now</button>
+        <button type="button" id="sign-out-btn" class="secondary">Sign out</button>
+      </div>
+      <div class="cloud-meta">
+        <span class="cloud-badge" id="cloud-auth-status">Not connected</span>
+        <span class="cloud-badge" id="cloud-workspace-status">No workspace selected</span>
+        <span class="cloud-badge" id="cloud-sync-status">Local cache only</span>
+      </div>
+    </section>
+
     <section class="panel active" id="habit-panel" role="tabpanel" aria-labelledby="tab-habit-panel">
       <div class="hero">
         <div class="hero-head">
@@ -1980,12 +2044,15 @@
     </div>
   </div>
 
+  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="https://unpkg.com/lucide@0.577.0/dist/umd/lucide.min.js"></script>
   <script>
     const CHALLENGE_START = new Date("2026-03-30T00:00:00");
     const CHALLENGE_DAYS = 75;
     const CHALLENGE_END = new Date("2026-06-13T00:00:00");
     const APP_TODAY = new Date("2026-03-29T00:00:00");
+    const SUPABASE_URL = "https://zqzscgpxweycqmjvpgxb.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_HIBVztkWxnockKDGvpPDtw_quKuhPOT";
     const HABIT_GROUPS = [
       "Workout",
       "Knowledge Base",
@@ -2037,7 +2104,12 @@
       mealPrompt: "meal-planner-prompt",
       mealAdjustments: "meal-planner-adjustments",
       mealImportText: "meal-planner-import-text",
-      mealPlan: "meal-plan-current"
+      mealPlan: "meal-plan-current",
+      supabaseEmail: "supabase-email",
+      workspaceName: "supabase-workspace-name",
+      workspaceInviteCode: "supabase-workspace-invite-code",
+      workspaceId: "supabase-workspace-id",
+      workspaceCode: "supabase-workspace-code"
     };
 
     const BASE_PROMPT = `I need a 7-day meal plan and grocery list. Here is my profile: 35F, 5'4", 69kg, sedentary desk job, 4x strength training/week (~250 cal burn each). PCOS, reversing insulin resistance. Air fryer cooking, max 45 min, cook-once-eat-twice (dinner = next day lunch). Targets: 1,850 cal · 138g protein · 195g carbs · 58g fat. Always pair carbs with protein 2:1. Approved proteins: chicken breast (max 2x/week), eggs, egg whites, tofu, paneer (occasional), pea protein, red/green lentils, chickpeas, black/white/mixed beans, edamame. Grains: quinoa, brown rice, whole grain sourdough, oats, rice cakes. Produce: spinach, kale, broccoli, zucchini, bell peppers, cucumber, cherry tomatoes, sweet potato, avocado, banana, berries, lemons, garlic, ginger, onions, coriander, cabbage. Fats: olive oil spray, sesame oil, almond butter, mixed nuts, chia seeds, flaxseeds, tahini, hummus, light coconut milk, avocado. Pantry: low sodium soy sauce, ACV, dijon mustard, canned tomatoes, coconut aminos. Never include: dairy (except paneer), chicken dal, refined carbs alone, high sugar foods. Breakfast fixed daily: pea protein shake + ½ banana + chia or flax alternating = 350 cal/30p/32c/6f. Chicken nights 2x/week: big meal-sized salad, rotate dressings. Non-chicken nights 5x/week: rotate tofu, lentil, paneer, egg, chickpea dishes across Indian/Mediterranean/Asian cuisines. Snack daily: egg whites + hummus + veg or nuts or avocado + rice cake = 190–220 cal/22–26g protein. Format each day: Breakfast · Lunch (leftover ref) · Snack (exact quantities) · Dinner (exact quantities + air fryer temp/time + makes 2 portions). End with: full grocery list by category, Sunday prep list under 45 min, 5 dressing recipes. Avoid repeating: [TYPE LAST WEEK'S DINNERS HERE].`;
@@ -2061,7 +2133,11 @@
       habitView: "week",
       habitFocusDate: formatDateInput(CHALLENGE_START),
       currentNutritionDate: formatDateInput(APP_TODAY),
-      mealPlanData: loadJSON(STORAGE_KEYS.mealPlan, null)
+      mealPlanData: loadJSON(STORAGE_KEYS.mealPlan, null),
+      supabaseClient: null,
+      supabaseSession: null,
+      workspaceId: localStorage.getItem(STORAGE_KEYS.workspaceId) || "",
+      workspaceCode: localStorage.getItem(STORAGE_KEYS.workspaceCode) || ""
     };
 
     const els = {};
@@ -2069,6 +2145,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       cacheElements();
+      bootSupabase();
       bootTabs();
       bootHabitTracker();
       bootNutritionTracker();
@@ -2078,6 +2155,17 @@
     function cacheElements() {
       els.tabButtons = [...document.querySelectorAll(".tab-btn")];
       els.panels = [...document.querySelectorAll(".panel")];
+      els.supabaseEmail = document.getElementById("supabase-email");
+      els.workspaceName = document.getElementById("workspace-name");
+      els.workspaceInviteCode = document.getElementById("workspace-invite-code");
+      els.sendMagicLinkBtn = document.getElementById("send-magic-link-btn");
+      els.createWorkspaceBtn = document.getElementById("create-workspace-btn");
+      els.joinWorkspaceBtn = document.getElementById("join-workspace-btn");
+      els.syncNowBtn = document.getElementById("sync-now-btn");
+      els.signOutBtn = document.getElementById("sign-out-btn");
+      els.cloudAuthStatus = document.getElementById("cloud-auth-status");
+      els.cloudWorkspaceStatus = document.getElementById("cloud-workspace-status");
+      els.cloudSyncStatus = document.getElementById("cloud-sync-status");
       els.habitTables = document.getElementById("habit-tables");
       els.habitProgressLabel = document.getElementById("habit-progress-label");
       els.habitProgressFill = document.getElementById("habit-progress-fill");
@@ -2141,6 +2229,165 @@
         panel.classList.toggle("active", isActive);
         panel.hidden = !isActive;
       });
+    }
+
+    function bootSupabase() {
+      els.supabaseEmail.value = localStorage.getItem(STORAGE_KEYS.supabaseEmail) || "";
+      els.workspaceName.value = localStorage.getItem(STORAGE_KEYS.workspaceName) || "Shared 75 Medium";
+      els.workspaceInviteCode.value = localStorage.getItem(STORAGE_KEYS.workspaceInviteCode) || "";
+
+      [
+        [els.supabaseEmail, STORAGE_KEYS.supabaseEmail],
+        [els.workspaceName, STORAGE_KEYS.workspaceName],
+        [els.workspaceInviteCode, STORAGE_KEYS.workspaceInviteCode]
+      ].forEach(([input, key]) => {
+        input.addEventListener("input", () => localStorage.setItem(key, input.value.trim()));
+      });
+
+      els.sendMagicLinkBtn.addEventListener("click", sendSupabaseMagicLink);
+      els.createWorkspaceBtn.addEventListener("click", createWorkspace);
+      els.joinWorkspaceBtn.addEventListener("click", joinWorkspace);
+      els.syncNowBtn.addEventListener("click", syncAllFromSupabase);
+      els.signOutBtn.addEventListener("click", signOutSupabase);
+
+      initSupabaseClient().then((ready) => {
+        if (ready) setCloudSyncStatus("Supabase client ready.");
+      });
+      updateCloudSyncUI();
+    }
+
+    async function initSupabaseClient() {
+      if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY || !window.supabase?.createClient) {
+        updateCloudSyncUI();
+        return false;
+      }
+
+      if (!appState.supabaseClient) {
+        appState.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true
+          }
+        });
+
+        appState.supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+          appState.supabaseSession = session;
+          updateCloudSyncUI();
+          if (session && appState.workspaceId) {
+            await syncAllFromSupabase();
+          }
+        });
+      }
+
+      const { data } = await appState.supabaseClient.auth.getSession();
+      appState.supabaseSession = data.session;
+      updateCloudSyncUI();
+      if (appState.supabaseSession && appState.workspaceId) {
+        syncAllFromSupabase();
+      }
+      return true;
+    }
+
+    function updateCloudSyncUI() {
+      const session = appState.supabaseSession;
+      els.cloudAuthStatus.textContent = session?.user?.email ? `Signed in: ${session.user.email}` : "Not connected";
+      els.cloudWorkspaceStatus.textContent = appState.workspaceCode
+        ? `Workspace code: ${appState.workspaceCode}`
+        : appState.workspaceId
+          ? "Workspace connected"
+          : "No workspace selected";
+      if (!appState.supabaseClient) {
+        els.cloudSyncStatus.textContent = "Local cache only";
+      }
+    }
+
+    function setCloudSyncStatus(text) {
+      els.cloudSyncStatus.textContent = text;
+    }
+
+    async function sendSupabaseMagicLink() {
+      const email = els.supabaseEmail.value.trim();
+      if (!email) {
+        setCloudSyncStatus("Enter your email first.");
+        return;
+      }
+      const ready = await initSupabaseClient();
+      if (!ready) {
+        setCloudSyncStatus("Supabase is not configured in the app yet.");
+        return;
+      }
+      const { error } = await appState.supabaseClient.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: window.location.href
+        }
+      });
+      setCloudSyncStatus(error ? `Magic link failed: ${error.message}` : "Magic link sent. Check your email, then come back here.");
+    }
+
+    async function createWorkspace() {
+      if (!await ensureSupabaseSession()) return;
+      const { data, error } = await appState.supabaseClient.rpc("create_workspace_for_me", {
+        workspace_name: els.workspaceName.value.trim() || "Shared 75 Medium"
+      });
+      if (error) {
+        setCloudSyncStatus(`Workspace create failed: ${error.message}`);
+        return;
+      }
+      const row = Array.isArray(data) ? data[0] : data;
+      appState.workspaceId = row?.workspace_id || "";
+      appState.workspaceCode = row?.invite_code || "";
+      localStorage.setItem(STORAGE_KEYS.workspaceId, appState.workspaceId);
+      localStorage.setItem(STORAGE_KEYS.workspaceCode, appState.workspaceCode);
+      updateCloudSyncUI();
+      setCloudSyncStatus(`Workspace created. Share code ${appState.workspaceCode} with your friend.`);
+      await syncAllFromSupabase();
+    }
+
+    async function joinWorkspace() {
+      if (!await ensureSupabaseSession()) return;
+      const inviteCode = els.workspaceInviteCode.value.trim();
+      if (!inviteCode) {
+        setCloudSyncStatus("Paste the workspace invite code first.");
+        return;
+      }
+      const { data, error } = await appState.supabaseClient.rpc("join_workspace_by_code", {
+        input_code: inviteCode
+      });
+      if (error) {
+        setCloudSyncStatus(`Join failed: ${error.message}`);
+        return;
+      }
+      const row = Array.isArray(data) ? data[0] : data;
+      appState.workspaceId = row?.workspace_id || "";
+      appState.workspaceCode = row?.invite_code || inviteCode.toUpperCase();
+      localStorage.setItem(STORAGE_KEYS.workspaceId, appState.workspaceId);
+      localStorage.setItem(STORAGE_KEYS.workspaceCode, appState.workspaceCode);
+      updateCloudSyncUI();
+      setCloudSyncStatus("Workspace joined. Syncing data...");
+      await syncAllFromSupabase();
+    }
+
+    async function signOutSupabase() {
+      if (!appState.supabaseClient) return;
+      await appState.supabaseClient.auth.signOut();
+      appState.supabaseSession = null;
+      updateCloudSyncUI();
+      setCloudSyncStatus("Signed out. Local cache still available on this browser.");
+    }
+
+    async function ensureSupabaseSession() {
+      const ready = await initSupabaseClient();
+      if (!ready) {
+        setCloudSyncStatus("Supabase is not configured in the app yet.");
+        return false;
+      }
+      if (!appState.supabaseSession) {
+        setCloudSyncStatus("Sign in with a magic link first.");
+        return false;
+      }
+      return true;
     }
 
     function bootHabitTracker() {
@@ -2213,6 +2460,7 @@
       const key = `${habitKey}-${date}`;
       const next = localStorage.getItem(key) === "1" ? "0" : "1";
       localStorage.setItem(key, next);
+      persistHabitToSupabase(habitKey, date, next === "1");
       const afterStats = challengeDateStats(targetDate);
       if (beforeStats.total > 0 && beforeStats.completed !== beforeStats.total && afterStats.completed === afterStats.total) {
         triggerCelebration();
@@ -2462,6 +2710,169 @@
             "stroke-width": "1.8"
           }
         });
+      }
+    }
+
+    function isSupabaseSyncReady() {
+      return Boolean(appState.supabaseClient && appState.supabaseSession && appState.workspaceId);
+    }
+
+    async function syncAllFromSupabase() {
+      if (!isSupabaseSyncReady()) {
+        updateCloudSyncUI();
+        return;
+      }
+      try {
+        setCloudSyncStatus("Syncing shared data...");
+        await Promise.all([
+          syncHabitsFromSupabase(),
+          syncNutritionFromSupabase(),
+          syncMealPlanFromSupabase()
+        ]);
+        renderHabitTracker();
+        renderNutritionTracker();
+        if (appState.mealPlanData) renderMealPlan(appState.mealPlanData);
+        setCloudSyncStatus("Shared data synced.");
+      } catch (error) {
+        console.error(error);
+        setCloudSyncStatus(`Sync failed: ${error.message}`);
+      }
+    }
+
+    async function syncHabitsFromSupabase() {
+      const { data, error } = await appState.supabaseClient
+        .from("habit_entries")
+        .select("entry_date, habit_key, checked")
+        .eq("workspace_id", appState.workspaceId)
+        .gte("entry_date", formatDateInput(CHALLENGE_START))
+        .lte("entry_date", formatDateInput(CHALLENGE_END));
+      if (error) throw error;
+
+      const keys = Object.values(HABIT_KEY_MAP);
+      for (let i = 0; i < CHALLENGE_DAYS; i += 1) {
+        const iso = formatDateInput(addDays(CHALLENGE_START, i));
+        keys.forEach((habitKey) => localStorage.removeItem(`${habitKey}-${iso}`));
+      }
+      (data || []).forEach((row) => {
+        if (row.checked) localStorage.setItem(`${row.habit_key}-${row.entry_date}`, "1");
+      });
+    }
+
+    async function syncNutritionFromSupabase() {
+      const { data, error } = await appState.supabaseClient
+        .from("nutrition_entries")
+        .select("entry_date, meal, name, calories, protein, carbs, fat, notes")
+        .eq("workspace_id", appState.workspaceId)
+        .order("entry_date", { ascending: true })
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+
+      Object.keys(localStorage)
+        .filter((key) => key.startsWith("nutrition-"))
+        .forEach((key) => localStorage.removeItem(key));
+
+      const byDate = {};
+      (data || []).forEach((row) => {
+        if (!byDate[row.entry_date]) {
+          byDate[row.entry_date] = { Breakfast: [], Lunch: [], Snack: [], Dinner: [] };
+        }
+        byDate[row.entry_date][row.meal].push({
+          name: row.name,
+          calories: Number(row.calories) || 0,
+          protein: Number(row.protein) || 0,
+          carbs: Number(row.carbs) || 0,
+          fat: Number(row.fat) || 0,
+          notes: row.notes || ""
+        });
+      });
+
+      Object.entries(byDate).forEach(([date, payload]) => {
+        localStorage.setItem(`nutrition-${date}`, JSON.stringify(payload));
+      });
+    }
+
+    async function syncMealPlanFromSupabase() {
+      const { data, error } = await appState.supabaseClient
+        .from("meal_plans")
+        .select("week_start, raw_text, structured, created_at")
+        .eq("workspace_id", appState.workspaceId)
+        .order("week_start", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) return;
+
+      const payload = {
+        ...(data.structured || {}),
+        rawText: data.raw_text,
+        generatedAt: data.created_at
+      };
+      localStorage.setItem(STORAGE_KEYS.mealPlan, JSON.stringify(payload));
+      appState.mealPlanData = payload;
+    }
+
+    async function persistHabitToSupabase(habitKey, date, checked) {
+      if (!isSupabaseSyncReady()) return;
+      const response = checked
+        ? await appState.supabaseClient.from("habit_entries").upsert({
+            workspace_id: appState.workspaceId,
+            entry_date: date,
+            habit_key: habitKey,
+            checked: true,
+            updated_by: appState.supabaseSession.user.id
+          })
+        : await appState.supabaseClient.from("habit_entries").delete().eq("workspace_id", appState.workspaceId).eq("entry_date", date).eq("habit_key", habitKey);
+      if (response.error) {
+        console.error(response.error);
+        setCloudSyncStatus(`Habit sync failed: ${response.error.message}`);
+      }
+    }
+
+    async function replaceNutritionDateInSupabase(iso, data) {
+      if (!isSupabaseSyncReady()) return;
+      const { error: deleteError } = await appState.supabaseClient.from("nutrition_entries").delete().eq("workspace_id", appState.workspaceId).eq("entry_date", iso);
+      if (deleteError) {
+        console.error(deleteError);
+        setCloudSyncStatus(`Nutrition sync failed: ${deleteError.message}`);
+        return;
+      }
+
+      const rows = Object.entries(data).flatMap(([meal, items]) =>
+        items.map((item) => ({
+          workspace_id: appState.workspaceId,
+          entry_date: iso,
+          meal,
+          name: item.name,
+          calories: Number(item.calories) || 0,
+          protein: Number(item.protein) || 0,
+          carbs: Number(item.carbs) || 0,
+          fat: Number(item.fat) || 0,
+          notes: item.notes || "",
+          created_by: appState.supabaseSession.user.id
+        }))
+      );
+      if (!rows.length) return;
+      const { error } = await appState.supabaseClient.from("nutrition_entries").insert(rows);
+      if (error) {
+        console.error(error);
+        setCloudSyncStatus(`Nutrition sync failed: ${error.message}`);
+      }
+    }
+
+    async function upsertMealPlanToSupabase(payload) {
+      if (!isSupabaseSyncReady()) return;
+      const weekStart = payload.week_start || formatDateInput(startOfWeek(APP_TODAY));
+      const { error } = await appState.supabaseClient.from("meal_plans").upsert({
+        workspace_id: appState.workspaceId,
+        week_start: weekStart,
+        raw_text: payload.rawText || "",
+        structured: payload,
+        created_by: appState.supabaseSession.user.id,
+        updated_at: new Date().toISOString()
+      });
+      if (error) {
+        console.error(error);
+        setCloudSyncStatus(`Meal plan sync failed: ${error.message}`);
       }
     }
 
@@ -2823,6 +3234,7 @@
 
     function saveNutrition(iso, data) {
       localStorage.setItem(`nutrition-${iso}`, JSON.stringify(data));
+      replaceNutritionDateInSupabase(iso, data);
     }
 
     function getMealItems(iso, meal) {
@@ -2985,6 +3397,7 @@ Do not use markdown code fences anywhere.`;
       appState.mealPlanData = payload;
       renderMealPlan(payload);
       setMealStatus("ChatGPT plan imported.");
+      upsertMealPlanToSupabase(payload);
     }
 
     function extractPlanData(rawText) {
