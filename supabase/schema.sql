@@ -305,7 +305,7 @@ begin
 
   insert into public.workspace_members (workspace_id, user_id, role)
   values (new_workspace.id, auth.uid(), 'owner')
-  on conflict (workspace_id, user_id) do update
+  on conflict on constraint workspace_members_pkey do update
   set role = excluded.role;
 
   return query
@@ -338,7 +338,7 @@ begin
 
   insert into public.workspace_members (workspace_id, user_id, role)
   values (target_workspace.id, auth.uid(), 'member')
-  on conflict (workspace_id, user_id) do nothing;
+  on conflict on constraint workspace_members_pkey do nothing;
 
   return query
   select target_workspace.id, target_workspace.name, target_workspace.invite_code, coalesce(public.workspace_role(target_workspace.id), 'member');
@@ -369,7 +369,7 @@ begin
   from public.invites i
   where lower(i.email) = auth_email
     and i.status = 'pending'
-  on conflict (workspace_id, user_id) do nothing;
+  on conflict on constraint workspace_members_pkey do nothing;
 
   update public.invites
   set status = 'accepted',
