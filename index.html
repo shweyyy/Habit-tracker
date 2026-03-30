@@ -2986,7 +2986,7 @@
         return;
       }
       try {
-        setCloudSyncStatus("Syncing shared data...");
+        setCloudSyncStatus("Syncing your data...");
         await Promise.all([
           syncHabitsFromSupabase(),
           syncNutritionFromSupabase(),
@@ -2995,7 +2995,7 @@
         renderHabitTracker();
         renderNutritionTracker();
         if (appState.mealPlanData) renderMealPlan(appState.mealPlanData);
-        setCloudSyncStatus("Shared data synced.");
+        setCloudSyncStatus("Your data synced.");
       } catch (error) {
         console.error(error);
         setCloudSyncStatus(`Sync failed: ${error.message}`);
@@ -3003,10 +3003,12 @@
     }
 
     async function syncHabitsFromSupabase() {
+      const userId = appState.supabaseSession.user.id;
       const { data, error } = await appState.supabaseClient
         .from("habit_entries")
         .select("entry_date, habit_key, checked")
         .eq("workspace_id", appState.workspaceId)
+        .eq("user_id", userId)
         .gte("entry_date", formatDateInput(CHALLENGE_START))
         .lte("entry_date", formatDateInput(CHALLENGE_END));
       if (error) throw error;
@@ -3022,10 +3024,12 @@
     }
 
     async function syncNutritionFromSupabase() {
+      const userId = appState.supabaseSession.user.id;
       const { data, error } = await appState.supabaseClient
         .from("nutrition_entries")
         .select("entry_date, meal, name, calories, protein, carbs, fat, notes")
         .eq("workspace_id", appState.workspaceId)
+        .eq("user_id", userId)
         .order("entry_date", { ascending: true })
         .order("created_at", { ascending: true });
       if (error) throw error;
@@ -3055,10 +3059,12 @@
     }
 
     async function syncMealPlanFromSupabase() {
+      const userId = appState.supabaseSession.user.id;
       const { data, error } = await appState.supabaseClient
         .from("meal_plans")
         .select("week_start, raw_text, structured, created_at")
         .eq("workspace_id", appState.workspaceId)
+        .eq("user_id", userId)
         .order("week_start", { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -3076,15 +3082,21 @@
 
     async function persistHabitToSupabase(habitKey, date, checked) {
       if (!isSupabaseSyncReady()) return;
+      const userId = appState.supabaseSession.user.id;
       const response = checked
         ? await appState.supabaseClient.from("habit_entries").upsert({
             workspace_id: appState.workspaceId,
             entry_date: date,
             habit_key: habitKey,
+            user_id: userId,
             checked: true,
-            updated_by: appState.supabaseSession.user.id
+            updated_by: userId
           })
-        : await appState.supabaseClient.from("habit_entries").delete().eq("workspace_id", appState.workspaceId).eq("entry_date", date).eq("habit_key", habitKey);
+        : await appState.supabaseClient.from("habit_entries").delete()
+            .eq("workspace_id", appState.workspaceId)
+            .eq("user_id", userId)
+            .eq("entry_date", date)
+            .eq("habit_key", habitKey);
       if (response.error) {
         console.error(response.error);
         setCloudSyncStatus(`Habit sync failed: ${response.error.message}`);
@@ -3093,7 +3105,13 @@
 
     async function replaceNutritionDateInSupabase(iso, data) {
       if (!isSupabaseSyncReady()) return;
-      const { error: deleteError } = await appState.supabaseClient.from("nutrition_entries").delete().eq("workspace_id", appState.workspaceId).eq("entry_date", iso);
+      const userId = appState.supabaseSession.user.id;
+      const { error: deleteError } = await appState.supabaseClient
+        .from("nutrition_entries")
+        .delete()
+        .eq("workspace_id", appState.workspaceId)
+        .eq("user_id", userId)
+        .eq("entry_date", iso);
       if (deleteError) {
         console.error(deleteError);
         setCloudSyncStatus(`Nutrition sync failed: ${deleteError.message}`);
@@ -3103,6 +3121,7 @@
       const rows = Object.entries(data).flatMap(([meal, items]) =>
         items.map((item) => ({
           workspace_id: appState.workspaceId,
+          user_id: userId,
           entry_date: iso,
           meal,
           name: item.name,
@@ -3111,7 +3130,7 @@
           carbs: Number(item.carbs) || 0,
           fat: Number(item.fat) || 0,
           notes: item.notes || "",
-          created_by: appState.supabaseSession.user.id
+          created_by: userId
         }))
       );
       if (!rows.length) return;
@@ -3124,13 +3143,15 @@
 
     async function upsertMealPlanToSupabase(payload) {
       if (!isSupabaseSyncReady()) return;
+      const userId = appState.supabaseSession.user.id;
       const weekStart = payload.week_start || formatDateInput(startOfWeek(APP_TODAY));
       const { error } = await appState.supabaseClient.from("meal_plans").upsert({
         workspace_id: appState.workspaceId,
+        user_id: userId,
         week_start: weekStart,
         raw_text: payload.rawText || "",
         structured: payload,
-        created_by: appState.supabaseSession.user.id,
+        created_by: userId,
         updated_at: new Date().toISOString()
       });
       if (error) {

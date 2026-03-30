@@ -1,6 +1,7 @@
 -- Run this whole file in the Supabase SQL editor.
 -- It is written to be upgrade-friendly for projects that already have
 -- an earlier version of the 75 Medium schema.
+-- v2: adds per-user data isolation (user_id on every data table).
 
 create extension if not exists pgcrypto;
 
@@ -66,19 +67,79 @@ check (status in ('pending', 'accepted', 'revoked'));
 create unique index if not exists invites_workspace_email_status_idx
 on public.invites (workspace_id, email, status);
 
+-- ─── habit_entries ────────────────────────────────────────────────────────────
+-- v2: primary key now includes user_id for per-user isolation.
+-- If upgrading from v1, the old PK must be dropped first.
+
+do $$
+begin
+  -- Add user_id column if it doesn't exist yet
+  if not exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public'
+      and table_name   = 'habit_entries'
+      and column_name  = 'user_id'
+  ) then
+    alter table public.habit_entries add column user_id uuid references auth.users(id) on delete cascade;
+    -- Back-fill from updated_by for any existing rows
+    update public.habit_entries set user_id = updated_by where user_id is null and updated_by is not null;
+  end if;
+
+  -- Re-create primary key to include user_id (idempotent)
+  if exists (
+    select 1 from information_schema.table_constraints
+    where table_schema = 'public'
+      and table_name   = 'habit_entries'
+      and constraint_type = 'PRIMARY KEY'
+  ) then
+    -- Drop old PK (may or may not include user_id)
+    execute (
+      select 'alter table public.habit_entries drop constraint ' || quote_ident(constraint_name)
+      from information_schema.table_constraints
+      where table_schema = 'public'
+        and table_name   = 'habit_entries'
+        and constraint_type = 'PRIMARY KEY'
+      limit 1
+    );
+  end if;
+
+  alter table public.habit_entries
+  add constraint habit_entries_pkey
+  primary key (workspace_id, entry_date, habit_key, user_id);
+end;
+$$ language plpgsql;
+
 create table if not exists public.habit_entries (
   workspace_id uuid not null references public.workspaces(id) on delete cascade,
   entry_date date not null,
   habit_key text not null,
+  user_id uuid not null references auth.users(id) on delete cascade,
   checked boolean not null default true,
   updated_at timestamptz not null default now(),
   updated_by uuid references auth.users(id) on delete set null,
-  primary key (workspace_id, entry_date, habit_key)
+  primary key (workspace_id, entry_date, habit_key, user_id)
 );
+
+-- ─── nutrition_entries ────────────────────────────────────────────────────────
+
+do $$
+begin
+  if not exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public'
+      and table_name   = 'nutrition_entries'
+      and column_name  = 'user_id'
+  ) then
+    alter table public.nutrition_entries add column user_id uuid references auth.users(id) on delete cascade;
+    update public.nutrition_entries set user_id = created_by where user_id is null and created_by is not null;
+  end if;
+end;
+$$ language plpgsql;
 
 create table if not exists public.nutrition_entries (
   id uuid primary key default gen_random_uuid(),
   workspace_id uuid not null references public.workspaces(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
   entry_date date not null,
   meal text not null,
   name text not null,
@@ -92,16 +153,57 @@ create table if not exists public.nutrition_entries (
   created_by uuid references auth.users(id) on delete set null
 );
 
+-- ─── meal_plans ───────────────────────────────────────────────────────────────
+-- v2: primary key now includes user_id.
+
+do $$
+begin
+  if not exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public'
+      and table_name   = 'meal_plans'
+      and column_name  = 'user_id'
+  ) then
+    alter table public.meal_plans add column user_id uuid references auth.users(id) on delete cascade;
+    update public.meal_plans set user_id = created_by where user_id is null and created_by is not null;
+  end if;
+
+  -- Re-create primary key to include user_id
+  if exists (
+    select 1 from information_schema.table_constraints
+    where table_schema = 'public'
+      and table_name   = 'meal_plans'
+      and constraint_type = 'PRIMARY KEY'
+  ) then
+    execute (
+      select 'alter table public.meal_plans drop constraint ' || quote_ident(constraint_name)
+      from information_schema.table_constraints
+      where table_schema = 'public'
+        and table_name   = 'meal_plans'
+        and constraint_type = 'PRIMARY KEY'
+      limit 1
+    );
+  end if;
+
+  alter table public.meal_plans
+  add constraint meal_plans_pkey
+  primary key (workspace_id, week_start, user_id);
+end;
+$$ language plpgsql;
+
 create table if not exists public.meal_plans (
   workspace_id uuid not null references public.workspaces(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
   week_start date not null,
   raw_text text not null,
   structured jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   created_by uuid references auth.users(id) on delete set null,
-  primary key (workspace_id, week_start)
+  primary key (workspace_id, week_start, user_id)
 );
+
+-- ─── Row Level Security ───────────────────────────────────────────────────────
 
 alter table public.workspaces enable row level security;
 alter table public.workspace_members enable row level security;
@@ -124,12 +226,18 @@ drop policy if exists "owners can manage invites" on public.invites;
 
 drop policy if exists "members can read habit entries" on public.habit_entries;
 drop policy if exists "members can write habit entries" on public.habit_entries;
+drop policy if exists "users can read own habit entries" on public.habit_entries;
+drop policy if exists "users can write own habit entries" on public.habit_entries;
 
 drop policy if exists "members can read nutrition entries" on public.nutrition_entries;
 drop policy if exists "members can write nutrition entries" on public.nutrition_entries;
+drop policy if exists "users can read own nutrition entries" on public.nutrition_entries;
+drop policy if exists "users can write own nutrition entries" on public.nutrition_entries;
 
 drop policy if exists "members can read meal plans" on public.meal_plans;
 drop policy if exists "members can write meal plans" on public.meal_plans;
+drop policy if exists "users can read own meal plans" on public.meal_plans;
+drop policy if exists "users can write own meal plans" on public.meal_plans;
 
 drop function if exists public.create_workspace_for_me(text);
 drop function if exists public.join_workspace_by_code(text);
@@ -137,6 +245,7 @@ drop function if exists public.accept_my_pending_invites();
 drop function if exists public.my_workspace_context();
 drop function if exists public.workspace_role(uuid);
 drop function if exists public.is_workspace_owner(uuid);
+drop function if exists public.is_workspace_member(uuid);
 
 create or replace function public.is_workspace_member(target_workspace uuid)
 returns boolean
@@ -291,6 +400,8 @@ as $$
   limit 1;
 $$;
 
+-- ─── Workspace policies ───────────────────────────────────────────────────────
+
 create policy "workspace members can read workspaces"
 on public.workspaces
 for select
@@ -330,41 +441,76 @@ to authenticated
 using (public.is_workspace_owner(workspace_id))
 with check (public.is_workspace_owner(workspace_id));
 
-create policy "members can read habit entries"
+-- ─── habit_entries policies (per-user isolation) ──────────────────────────────
+
+-- Read: must be a workspace member AND the row belongs to you
+create policy "users can read own habit entries"
 on public.habit_entries
 for select
 to authenticated
-using (public.is_workspace_member(workspace_id));
+using (
+  public.is_workspace_member(workspace_id)
+  and user_id = auth.uid()
+);
 
-create policy "members can write habit entries"
+-- Write: must be a workspace member AND inserting/updating your own rows only
+create policy "users can write own habit entries"
 on public.habit_entries
 for all
 to authenticated
-using (public.is_workspace_member(workspace_id))
-with check (public.is_workspace_member(workspace_id));
+using (
+  public.is_workspace_member(workspace_id)
+  and user_id = auth.uid()
+)
+with check (
+  public.is_workspace_member(workspace_id)
+  and user_id = auth.uid()
+);
 
-create policy "members can read nutrition entries"
+-- ─── nutrition_entries policies (per-user isolation) ──────────────────────────
+
+create policy "users can read own nutrition entries"
 on public.nutrition_entries
 for select
 to authenticated
-using (public.is_workspace_member(workspace_id));
+using (
+  public.is_workspace_member(workspace_id)
+  and user_id = auth.uid()
+);
 
-create policy "members can write nutrition entries"
+create policy "users can write own nutrition entries"
 on public.nutrition_entries
 for all
 to authenticated
-using (public.is_workspace_member(workspace_id))
-with check (public.is_workspace_member(workspace_id));
+using (
+  public.is_workspace_member(workspace_id)
+  and user_id = auth.uid()
+)
+with check (
+  public.is_workspace_member(workspace_id)
+  and user_id = auth.uid()
+);
 
-create policy "members can read meal plans"
+-- ─── meal_plans policies (per-user isolation) ─────────────────────────────────
+
+create policy "users can read own meal plans"
 on public.meal_plans
 for select
 to authenticated
-using (public.is_workspace_member(workspace_id));
+using (
+  public.is_workspace_member(workspace_id)
+  and user_id = auth.uid()
+);
 
-create policy "members can write meal plans"
+create policy "users can write own meal plans"
 on public.meal_plans
 for all
 to authenticated
-using (public.is_workspace_member(workspace_id))
-with check (public.is_workspace_member(workspace_id));
+using (
+  public.is_workspace_member(workspace_id)
+  and user_id = auth.uid()
+)
+with check (
+  public.is_workspace_member(workspace_id)
+  and user_id = auth.uid()
+);
