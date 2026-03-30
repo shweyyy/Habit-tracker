@@ -1785,6 +1785,7 @@
       <button type="button" class="tab-btn active" data-tab="habit-panel" id="tab-habit-panel" role="tab" aria-selected="true" aria-controls="habit-panel">Habit Tracker</button>
       <button type="button" class="tab-btn" data-tab="nutrition-panel" id="tab-nutrition-panel" role="tab" aria-selected="false" aria-controls="nutrition-panel">Nutrition Tracker</button>
       <button type="button" class="tab-btn" data-tab="meal-panel" id="tab-meal-panel" role="tab" aria-selected="false" aria-controls="meal-panel">Meal Planner</button>
+      <button type="button" class="tab-btn" data-tab="admin-panel" id="tab-admin-panel" role="tab" aria-selected="false" aria-controls="admin-panel" hidden>Admin</button>
     </nav>
   </header>
 
@@ -1805,15 +1806,10 @@
           <span>Workspace name</span>
           <input type="text" id="workspace-name" placeholder="Shared 75 Medium" />
         </label>
-        <label class="field">
-          <span>Invite code</span>
-          <input type="text" id="workspace-invite-code" placeholder="Paste your friend's code" />
-        </label>
       </div>
       <div class="planner-actions" style="margin-top:1rem;">
         <button type="button" id="send-magic-link-btn" class="secondary">Send magic link</button>
         <button type="button" id="create-workspace-btn" class="secondary">Create workspace</button>
-        <button type="button" id="join-workspace-btn" class="secondary">Join workspace</button>
         <button type="button" id="sync-now-btn" class="secondary">Sync now</button>
         <button type="button" id="sign-out-btn" class="secondary">Sign out</button>
       </div>
@@ -2031,6 +2027,73 @@
         </div>
       </div>
     </section>
+
+    <section class="panel" id="admin-panel" role="tabpanel" aria-labelledby="tab-admin-panel" hidden>
+      <div class="hero">
+        <div class="hero-head">
+          <div>
+            <h2>Admin</h2>
+            <p class="subtle">Invite friends by email, review pending invites, and manage the shared workspace without exposing admin controls to members.</p>
+          </div>
+          <div class="actions">
+            <button type="button" id="admin-refresh-btn" class="secondary">Refresh</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="planner-layout">
+        <div class="planner-grid planner-config">
+          <div class="section-card planner-controls">
+            <div class="section-head">
+              <div>
+                <h3>Invite Friend</h3>
+                <p class="subtle" style="margin:0.3rem 0 0;">Send a secure email invite. Your friend signs in from the email and lands in the member view automatically.</p>
+              </div>
+            </div>
+            <div class="settings-grid">
+              <label class="field">
+                <span>Friend's email</span>
+                <input type="email" id="admin-invite-email" placeholder="friend@example.com" />
+              </label>
+            </div>
+            <div class="planner-actions" style="margin-top:1rem;">
+              <button type="button" id="admin-send-invite-btn">Send invite</button>
+              <span class="status" id="admin-status" role="status" aria-live="polite">Owner tools are ready.</span>
+            </div>
+          </div>
+
+          <div class="section-card planner-controls">
+            <div class="section-head">
+              <div>
+                <h3>Workspace Overview</h3>
+                <p class="subtle" style="margin:0.3rem 0 0;">A quick read on your workspace and access model.</p>
+              </div>
+            </div>
+            <div class="summary-list" id="admin-workspace-summary"></div>
+          </div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h3>Members</h3>
+              <p class="subtle" style="margin:0.3rem 0 0;">Only you can view and manage this list.</p>
+            </div>
+          </div>
+          <div class="summary-list" id="admin-members-list"></div>
+        </div>
+
+        <div class="section-card">
+          <div class="section-head">
+            <div>
+              <h3>Invites</h3>
+              <p class="subtle" style="margin:0.3rem 0 0;">Pending and accepted invitations for this workspace.</p>
+            </div>
+          </div>
+          <div class="summary-list" id="admin-invites-list"></div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <div class="celebration-overlay" id="celebration-overlay" aria-hidden="true">
@@ -2107,9 +2170,9 @@
       mealPlan: "meal-plan-current",
       supabaseEmail: "supabase-email",
       workspaceName: "supabase-workspace-name",
-      workspaceInviteCode: "supabase-workspace-invite-code",
       workspaceId: "supabase-workspace-id",
-      workspaceCode: "supabase-workspace-code"
+      workspaceCode: "supabase-workspace-code",
+      workspaceRole: "supabase-workspace-role"
     };
 
     const BASE_PROMPT = `I need a 7-day meal plan and grocery list. Here is my profile: 35F, 5'4", 69kg, sedentary desk job, 4x strength training/week (~250 cal burn each). PCOS, reversing insulin resistance. Air fryer cooking, max 45 min, cook-once-eat-twice (dinner = next day lunch). Targets: 1,850 cal · 138g protein · 195g carbs · 58g fat. Always pair carbs with protein 2:1. Approved proteins: chicken breast (max 2x/week), eggs, egg whites, tofu, paneer (occasional), pea protein, red/green lentils, chickpeas, black/white/mixed beans, edamame. Grains: quinoa, brown rice, whole grain sourdough, oats, rice cakes. Produce: spinach, kale, broccoli, zucchini, bell peppers, cucumber, cherry tomatoes, sweet potato, avocado, banana, berries, lemons, garlic, ginger, onions, coriander, cabbage. Fats: olive oil spray, sesame oil, almond butter, mixed nuts, chia seeds, flaxseeds, tahini, hummus, light coconut milk, avocado. Pantry: low sodium soy sauce, ACV, dijon mustard, canned tomatoes, coconut aminos. Never include: dairy (except paneer), chicken dal, refined carbs alone, high sugar foods. Breakfast fixed daily: pea protein shake + ½ banana + chia or flax alternating = 350 cal/30p/32c/6f. Chicken nights 2x/week: big meal-sized salad, rotate dressings. Non-chicken nights 5x/week: rotate tofu, lentil, paneer, egg, chickpea dishes across Indian/Mediterranean/Asian cuisines. Snack daily: egg whites + hummus + veg or nuts or avocado + rice cake = 190–220 cal/22–26g protein. Format each day: Breakfast · Lunch (leftover ref) · Snack (exact quantities) · Dinner (exact quantities + air fryer temp/time + makes 2 portions). End with: full grocery list by category, Sunday prep list under 45 min, 5 dressing recipes. Avoid repeating: [TYPE LAST WEEK'S DINNERS HERE].`;
@@ -2137,7 +2200,13 @@
       supabaseClient: null,
       supabaseSession: null,
       workspaceId: localStorage.getItem(STORAGE_KEYS.workspaceId) || "",
-      workspaceCode: localStorage.getItem(STORAGE_KEYS.workspaceCode) || ""
+      workspaceCode: localStorage.getItem(STORAGE_KEYS.workspaceCode) || "",
+      workspaceRole: localStorage.getItem(STORAGE_KEYS.workspaceRole) || "",
+      workspaceName: localStorage.getItem(STORAGE_KEYS.workspaceName) || "",
+      adminData: {
+        members: [],
+        invites: []
+      }
     };
 
     const els = {};
@@ -2150,6 +2219,7 @@
       bootHabitTracker();
       bootNutritionTracker();
       bootMealPlanner();
+      bootAdminPanel();
     });
 
     function cacheElements() {
@@ -2157,15 +2227,21 @@
       els.panels = [...document.querySelectorAll(".panel")];
       els.supabaseEmail = document.getElementById("supabase-email");
       els.workspaceName = document.getElementById("workspace-name");
-      els.workspaceInviteCode = document.getElementById("workspace-invite-code");
       els.sendMagicLinkBtn = document.getElementById("send-magic-link-btn");
       els.createWorkspaceBtn = document.getElementById("create-workspace-btn");
-      els.joinWorkspaceBtn = document.getElementById("join-workspace-btn");
       els.syncNowBtn = document.getElementById("sync-now-btn");
       els.signOutBtn = document.getElementById("sign-out-btn");
       els.cloudAuthStatus = document.getElementById("cloud-auth-status");
       els.cloudWorkspaceStatus = document.getElementById("cloud-workspace-status");
       els.cloudSyncStatus = document.getElementById("cloud-sync-status");
+      els.adminTabBtn = document.getElementById("tab-admin-panel");
+      els.adminInviteEmail = document.getElementById("admin-invite-email");
+      els.adminSendInviteBtn = document.getElementById("admin-send-invite-btn");
+      els.adminRefreshBtn = document.getElementById("admin-refresh-btn");
+      els.adminStatus = document.getElementById("admin-status");
+      els.adminWorkspaceSummary = document.getElementById("admin-workspace-summary");
+      els.adminMembersList = document.getElementById("admin-members-list");
+      els.adminInvitesList = document.getElementById("admin-invites-list");
       els.habitTables = document.getElementById("habit-tables");
       els.habitProgressLabel = document.getElementById("habit-progress-label");
       els.habitProgressFill = document.getElementById("habit-progress-fill");
@@ -2234,19 +2310,16 @@
     function bootSupabase() {
       els.supabaseEmail.value = localStorage.getItem(STORAGE_KEYS.supabaseEmail) || "";
       els.workspaceName.value = localStorage.getItem(STORAGE_KEYS.workspaceName) || "Shared 75 Medium";
-      els.workspaceInviteCode.value = localStorage.getItem(STORAGE_KEYS.workspaceInviteCode) || "";
 
       [
         [els.supabaseEmail, STORAGE_KEYS.supabaseEmail],
-        [els.workspaceName, STORAGE_KEYS.workspaceName],
-        [els.workspaceInviteCode, STORAGE_KEYS.workspaceInviteCode]
+        [els.workspaceName, STORAGE_KEYS.workspaceName]
       ].forEach(([input, key]) => {
         input.addEventListener("input", () => localStorage.setItem(key, input.value.trim()));
       });
 
       els.sendMagicLinkBtn.addEventListener("click", sendSupabaseMagicLink);
       els.createWorkspaceBtn.addEventListener("click", createWorkspace);
-      els.joinWorkspaceBtn.addEventListener("click", joinWorkspace);
       els.syncNowBtn.addEventListener("click", syncAllFromSupabase);
       els.signOutBtn.addEventListener("click", signOutSupabase);
 
@@ -2272,19 +2345,10 @@
         });
 
         appState.supabaseClient.auth.onAuthStateChange(async (_event, session) => {
-          appState.supabaseSession = session;
-          updateCloudSyncUI();
-          if (session && appState.workspaceId) {
-            await syncAllFromSupabase();
-          }
+          await handleSessionChange(session);
         });
-      }
-
-      const { data } = await appState.supabaseClient.auth.getSession();
-      appState.supabaseSession = data.session;
-      updateCloudSyncUI();
-      if (appState.supabaseSession && appState.workspaceId) {
-        syncAllFromSupabase();
+        const { data } = await appState.supabaseClient.auth.getSession();
+        await handleSessionChange(data.session);
       }
       return true;
     }
@@ -2293,13 +2357,14 @@
       const session = appState.supabaseSession;
       els.cloudAuthStatus.textContent = session?.user?.email ? `Signed in: ${session.user.email}` : "Not connected";
       els.cloudWorkspaceStatus.textContent = appState.workspaceCode
-        ? `Workspace code: ${appState.workspaceCode}`
+        ? `${appState.workspaceName || "Workspace"} · ${appState.workspaceRole || "member"}`
         : appState.workspaceId
           ? "Workspace connected"
           : "No workspace selected";
       if (!appState.supabaseClient) {
         els.cloudSyncStatus.textContent = "Local cache only";
       }
+      updateAdminVisibility();
     }
 
     function setCloudSyncStatus(text) {
@@ -2336,45 +2401,18 @@
         return;
       }
       const row = Array.isArray(data) ? data[0] : data;
-      appState.workspaceId = row?.workspace_id || "";
-      appState.workspaceCode = row?.invite_code || "";
-      localStorage.setItem(STORAGE_KEYS.workspaceId, appState.workspaceId);
-      localStorage.setItem(STORAGE_KEYS.workspaceCode, appState.workspaceCode);
+      applyWorkspaceContext(row);
       updateCloudSyncUI();
-      setCloudSyncStatus(`Workspace created. Share code ${appState.workspaceCode} with your friend.`);
+      setCloudSyncStatus("Workspace created. Use the Admin tab to invite your friend by email.");
       await syncAllFromSupabase();
-    }
-
-    async function joinWorkspace() {
-      if (!await ensureSupabaseSession()) return;
-      const inviteCode = els.workspaceInviteCode.value.trim();
-      if (!inviteCode) {
-        setCloudSyncStatus("Paste the workspace invite code first.");
-        return;
-      }
-      const { data, error } = await appState.supabaseClient.rpc("join_workspace_by_code", {
-        input_code: inviteCode
-      });
-      if (error) {
-        setCloudSyncStatus(`Join failed: ${error.message}`);
-        return;
-      }
-      const row = Array.isArray(data) ? data[0] : data;
-      appState.workspaceId = row?.workspace_id || "";
-      appState.workspaceCode = row?.invite_code || inviteCode.toUpperCase();
-      localStorage.setItem(STORAGE_KEYS.workspaceId, appState.workspaceId);
-      localStorage.setItem(STORAGE_KEYS.workspaceCode, appState.workspaceCode);
-      updateCloudSyncUI();
-      setCloudSyncStatus("Workspace joined. Syncing data...");
-      await syncAllFromSupabase();
+      await loadAdminData();
     }
 
     async function signOutSupabase() {
       if (!appState.supabaseClient) return;
       await appState.supabaseClient.auth.signOut();
-      appState.supabaseSession = null;
-      updateCloudSyncUI();
-      setCloudSyncStatus("Signed out. Local cache still available on this browser.");
+      await handleSessionChange(null);
+      setCloudSyncStatus("Signed out. Local cache still stays on this browser.");
     }
 
     async function ensureSupabaseSession() {
@@ -2388,6 +2426,231 @@
         return false;
       }
       return true;
+    }
+
+    async function handleSessionChange(session) {
+      appState.supabaseSession = session;
+      if (!session) {
+        appState.workspaceRole = "";
+        appState.adminData = { members: [], invites: [] };
+        updateCloudSyncUI();
+        renderAdminPanel();
+        if (appState.activeTab === "admin-panel") setActiveTab("habit-panel");
+        return;
+      }
+
+      try {
+        await appState.supabaseClient.rpc("accept_my_pending_invites");
+      } catch (error) {
+        console.error(error);
+      }
+
+      await hydrateWorkspaceContext();
+      updateCloudSyncUI();
+      if (appState.workspaceId) {
+        await syncAllFromSupabase();
+        if (appState.workspaceRole === "owner") {
+          await loadAdminData();
+        } else {
+          appState.adminData = { members: [], invites: [] };
+          renderAdminPanel();
+        }
+      }
+    }
+
+    async function hydrateWorkspaceContext() {
+      if (!appState.supabaseClient || !appState.supabaseSession) return;
+      const { data, error } = await appState.supabaseClient.rpc("my_workspace_context");
+      if (error) {
+        console.error(error);
+        setCloudSyncStatus(`Workspace lookup failed: ${error.message}`);
+        return;
+      }
+      const row = Array.isArray(data) ? data[0] : data;
+      if (!row) {
+        appState.workspaceId = "";
+        appState.workspaceCode = "";
+        appState.workspaceRole = "";
+        appState.workspaceName = "";
+        localStorage.removeItem(STORAGE_KEYS.workspaceId);
+        localStorage.removeItem(STORAGE_KEYS.workspaceCode);
+        localStorage.removeItem(STORAGE_KEYS.workspaceRole);
+        updateCloudSyncUI();
+        renderAdminPanel();
+        return;
+      }
+      applyWorkspaceContext(row);
+    }
+
+    function applyWorkspaceContext(row) {
+      appState.workspaceId = row?.workspace_id || "";
+      appState.workspaceCode = row?.invite_code || "";
+      appState.workspaceRole = row?.member_role || "";
+      appState.workspaceName = row?.workspace_name || els.workspaceName.value.trim() || "Shared 75 Medium";
+      localStorage.setItem(STORAGE_KEYS.workspaceId, appState.workspaceId);
+      localStorage.setItem(STORAGE_KEYS.workspaceCode, appState.workspaceCode);
+      localStorage.setItem(STORAGE_KEYS.workspaceRole, appState.workspaceRole);
+      localStorage.setItem(STORAGE_KEYS.workspaceName, appState.workspaceName);
+      els.workspaceName.value = appState.workspaceName;
+      renderAdminPanel();
+    }
+
+    function updateAdminVisibility() {
+      const isOwner = Boolean(appState.supabaseSession && appState.workspaceRole === "owner");
+      els.adminTabBtn.hidden = !isOwner;
+      if (!isOwner && appState.activeTab === "admin-panel") {
+        setActiveTab("habit-panel");
+      }
+    }
+
+    function bootAdminPanel() {
+      els.adminSendInviteBtn.addEventListener("click", sendWorkspaceInvite);
+      els.adminRefreshBtn.addEventListener("click", loadAdminData);
+      renderAdminPanel();
+    }
+
+    function renderAdminPanel() {
+      const isOwner = Boolean(appState.supabaseSession && appState.workspaceRole === "owner");
+      els.adminWorkspaceSummary.innerHTML = isOwner ? `
+        <div class="summary-item">
+          <strong>Workspace</strong>
+          <span>${escapeHtml(appState.workspaceName || "Shared 75 Medium")}</span>
+        </div>
+        <div class="summary-item">
+          <strong>Your role</strong>
+          <span>${escapeHtml(appState.workspaceRole || "owner")}</span>
+        </div>
+        <div class="summary-item">
+          <strong>Access model</strong>
+          <span>Owner-only admin tools. Members only see the tracker.</span>
+        </div>
+      ` : `<div class="empty-state">Admin tools appear here for the workspace owner only.</div>`;
+
+      els.adminMembersList.innerHTML = isOwner
+        ? (appState.adminData.members.length
+          ? appState.adminData.members.map((member) => `
+              <div class="summary-item">
+                <div>
+                  <strong>${escapeHtml(member.email || member.user_id)}</strong>
+                  <span class="subtle" style="display:block; margin-top:0.2rem;">${escapeHtml(member.role)} member${member.role === "owner" ? " · full admin access" : ""}</span>
+                </div>
+                <div>
+                  ${member.role === "owner" ? `<span class="cloud-badge">Owner</span>` : `<button type="button" class="secondary admin-remove-member-btn" data-user-id="${member.user_id}">Remove</button>`}
+                </div>
+              </div>
+            `).join("")
+          : `<div class="empty-state">No members yet.</div>`)
+        : `<div class="empty-state">Sign in as the owner to manage members.</div>`;
+
+      els.adminInvitesList.innerHTML = isOwner
+        ? (appState.adminData.invites.length
+          ? appState.adminData.invites.map((invite) => `
+              <div class="summary-item">
+                <div>
+                  <strong>${escapeHtml(invite.email)}</strong>
+                  <span class="subtle" style="display:block; margin-top:0.2rem;">${escapeHtml(invite.status)} · ${invite.created_at ? formatLongDateTime(invite.created_at) : "recently created"}</span>
+                </div>
+                <div><span class="cloud-badge">${escapeHtml(invite.role || "member")}</span></div>
+              </div>
+            `).join("")
+          : `<div class="empty-state">No invites sent yet.</div>`)
+        : `<div class="empty-state">Pending invites are only visible to the owner.</div>`;
+
+      document.querySelectorAll(".admin-remove-member-btn").forEach((button) => {
+        button.onclick = () => removeMember(button.dataset.userId);
+      });
+    }
+
+    function setAdminStatus(text) {
+      els.adminStatus.textContent = text;
+    }
+
+    async function loadAdminData() {
+      if (appState.workspaceRole !== "owner") {
+        renderAdminPanel();
+        return;
+      }
+      if (!await ensureSupabaseSession()) return;
+      try {
+        setAdminStatus("Refreshing members and invites...");
+        const payload = await invokeEdgeFunction("list-workspace-people", {
+          workspaceId: appState.workspaceId
+        });
+        appState.adminData = {
+          members: Array.isArray(payload?.members) ? payload.members : [],
+          invites: Array.isArray(payload?.invites) ? payload.invites : []
+        };
+        renderAdminPanel();
+        setAdminStatus("Admin data is up to date.");
+      } catch (error) {
+        console.error(error);
+        setAdminStatus(`Could not load admin data: ${error.message}`);
+      }
+    }
+
+    async function sendWorkspaceInvite() {
+      if (appState.workspaceRole !== "owner") {
+        setAdminStatus("Only the workspace owner can send invites.");
+        return;
+      }
+      const email = els.adminInviteEmail.value.trim().toLowerCase();
+      if (!email) {
+        setAdminStatus("Enter your friend's email first.");
+        return;
+      }
+      try {
+        setAdminStatus("Sending invite...");
+        await invokeEdgeFunction("invite-member", {
+          workspaceId: appState.workspaceId,
+          email,
+          redirectTo: window.location.href
+        });
+        els.adminInviteEmail.value = "";
+        setAdminStatus(`Invite sent to ${email}.`);
+        await loadAdminData();
+      } catch (error) {
+        console.error(error);
+        setAdminStatus(`Invite failed: ${error.message}`);
+      }
+    }
+
+    async function removeMember(userId) {
+      if (appState.workspaceRole !== "owner") {
+        setAdminStatus("Only the workspace owner can remove members.");
+        return;
+      }
+      if (!userId) return;
+      try {
+        setAdminStatus("Removing member...");
+        await invokeEdgeFunction("remove-member", {
+          workspaceId: appState.workspaceId,
+          userId
+        });
+        setAdminStatus("Member removed.");
+        await loadAdminData();
+      } catch (error) {
+        console.error(error);
+        setAdminStatus(`Remove failed: ${error.message}`);
+      }
+    }
+
+    async function invokeEdgeFunction(name, payload) {
+      if (!await ensureSupabaseSession()) {
+        throw new Error("Sign in first.");
+      }
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/${name}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${appState.supabaseSession.access_token}`
+        },
+        body: JSON.stringify(payload || {})
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data?.error || `Function ${name} failed.`);
+      }
+      return data;
     }
 
     function bootHabitTracker() {
@@ -3589,6 +3852,16 @@ Do not use markdown code fences anywhere.`;
         month: "long",
         day: "numeric",
         year: "numeric"
+      });
+    }
+
+    function formatLongDateTime(value) {
+      return new Date(value).toLocaleString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
       });
     }
 
