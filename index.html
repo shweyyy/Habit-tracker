@@ -2574,12 +2574,35 @@
       if (!await ensureSupabaseSession()) return;
       try {
         setAdminStatus("Refreshing members and invites...");
-        const payload = await invokeEdgeFunction("list-workspace-people", {
-          workspaceId: appState.workspaceId
+        const [membersResult, invitesResult] = await Promise.all([
+          appState.supabaseClient
+            .from("workspace_members")
+            .select("user_id, role, created_at")
+            .eq("workspace_id", appState.workspaceId)
+            .order("created_at", { ascending: true }),
+          appState.supabaseClient
+            .from("invites")
+            .select("id, email, role, status, created_at, accepted_at")
+            .eq("workspace_id", appState.workspaceId)
+            .order("created_at", { ascending: false })
+        ]);
+        if (membersResult.error) throw membersResult.error;
+        if (invitesResult.error) throw invitesResult.error;
+
+        // Map emails where known (owner's own email is always available)
+        const knownEmails = new Map();
+        knownEmails.set(appState.supabaseSession.user.id, appState.supabaseSession.user.email || "");
+        // Also back-fill emails from accepted invites
+        (invitesResult.data ?? []).forEach((invite) => {
+          if (invite.status === "accepted") knownEmails.set(invite.email, invite.email);
         });
+
         appState.adminData = {
-          members: Array.isArray(payload?.members) ? payload.members : [],
-          invites: Array.isArray(payload?.invites) ? payload.invites : []
+          members: (membersResult.data ?? []).map((m) => ({
+            ...m,
+            email: knownEmails.get(m.user_id) || `Member …${m.user_id.slice(-6)}`
+          })),
+          invites: invitesResult.data ?? []
         };
         renderAdminPanel();
         setAdminStatus("Admin data is up to date.");
@@ -2599,15 +2622,21 @@
         setAdminStatus("Enter your friend's email first.");
         return;
       }
+      if (!await ensureSupabaseSession()) return;
       try {
-        setAdminStatus("Sending invite...");
-        await invokeEdgeFunction("invite-member", {
-          workspaceId: appState.workspaceId,
-          email,
-          redirectTo: window.location.href
-        });
+        setAdminStatus("Creating invite...");
+        const { error } = await appState.supabaseClient
+          .from("invites")
+          .upsert({
+            workspace_id: appState.workspaceId,
+            email,
+            role: "member",
+            status: "pending",
+            invited_by: appState.supabaseSession.user.id
+          }, { onConflict: "workspace_id,email,status" });
+        if (error) throw error;
         els.adminInviteEmail.value = "";
-        setAdminStatus(`Invite sent to ${email}.`);
+        setAdminStatus(`Invite ready for ${email}. Share the app URL with them — when they log in with that email, they\'ll be added automatically.`);
         await loadAdminData();
       } catch (error) {
         console.error(error);
@@ -2621,12 +2650,15 @@
         return;
       }
       if (!userId) return;
+      if (!await ensureSupabaseSession()) return;
       try {
         setAdminStatus("Removing member...");
-        await invokeEdgeFunction("remove-member", {
-          workspaceId: appState.workspaceId,
-          userId
-        });
+        const { error } = await appState.supabaseClient
+          .from("workspace_members")
+          .delete()
+          .eq("workspace_id", appState.workspaceId)
+          .eq("user_id", userId);
+        if (error) throw error;
         setAdminStatus("Member removed.");
         await loadAdminData();
       } catch (error) {
