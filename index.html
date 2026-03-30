@@ -2607,8 +2607,9 @@
         renderAdminPanel();
         setAdminStatus("Admin data is up to date.");
       } catch (error) {
-        console.error(error);
-        setAdminStatus(`Could not load admin data: ${error.message}`);
+        console.error("loadAdminData error:", error);
+        const detail = error.code ? ` (DB code: ${error.code})` : "";
+        setAdminStatus(`Could not load admin data: ${error.message}${detail} — Have you run the SQL fix in Supabase?`);
       }
     }
 
@@ -2636,12 +2637,14 @@
           }, { onConflict: "workspace_id,email,status" });
         if (error) throw error;
         els.adminInviteEmail.value = "";
-        setAdminStatus(`Invite ready for ${email}. Share the app URL with them — when they log in with that email, they\'ll be added automatically.`);
-        await loadAdminData();
+        setAdminStatus(`✅ Invite ready for ${email}. Share the app URL with them — they log in with their email and will be added automatically.`);
       } catch (error) {
-        console.error(error);
-        setAdminStatus(`Invite failed: ${error.message}`);
+        console.error("sendWorkspaceInvite error:", error);
+        setAdminStatus(`Invite failed: ${error.message} (code: ${error.code || "unknown"})`);
+        return;
       }
+      // Refresh admin panel separately so its errors don't mask the invite result
+      await loadAdminData();
     }
 
     async function removeMember(userId) {
